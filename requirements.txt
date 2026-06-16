@@ -1,0 +1,15 @@
+## Base dependencies for the FastAPI backend; installed in Docker builds and CI venvs.
+fastapi>=0.111.0
+langgraph>=1.0.0,<2.0.0
+argilla
+httpx-auth
+openai>=1.0.0,<2.0.0
+qdrant-client
+typer
+apollo-client==0.1.9
+pyshacl>=0.25.0
+rdflib>=7.0.0
+rapidfuzz>=3.9.0
+requests>=2.31.0
+uvicorn>=0.30.0
+python-dotenv>=1.0.1

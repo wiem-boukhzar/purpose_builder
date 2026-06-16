@@ -1,0 +1,4 @@
+## Dev/test extras pulled into CI virtualenvs on Jenkins and local runs.
+-r requirements.txt
+pytest>=8.3.0
+pytest-cov>=5.0.0
