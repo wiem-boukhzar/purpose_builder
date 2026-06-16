@@ -1,0 +1,17 @@
+{"event": "chat_message", "timestamp": "2025-12-03T14:51:46.874657+00:00", "role": "user", "content": "I want to study diabetes"}
+{"event": "llm_request", "timestamp": "2025-12-03T14:51:57.672450+00:00", "provider": "apollo", "model": "gpt-5-mini", "message_count": 3}
+{"event": "llm_response", "timestamp": "2025-12-03T14:52:02.284638+00:00", "provider": "apollo", "status": "ok"}
+{"event": "validation_deferred", "timestamp": "2025-12-03T14:52:02.287947+00:00", "diseases": ["diabetes"], "message": "Ontology linking deferred to final validation stage."}
+{"event": "chat_message", "timestamp": "2025-12-03T14:52:02.288960+00:00", "role": "assistant", "content": "I understand you're working on diabetes. Do you have a medication? If so, which one? Still need: Collaborator, Product Development."}
+{"event": "chat_message", "timestamp": "2025-12-03T14:52:54.205173+00:00", "role": "user", "content": "I want to study diabetes"}
+{"event": "llm_request", "timestamp": "2025-12-03T14:52:54.224725+00:00", "provider": "apollo", "model": "gpt-5-mini", "message_count": 3}
+{"event": "llm_response", "timestamp": "2025-12-03T14:52:58.648849+00:00", "provider": "apollo", "status": "ok"}
+{"event": "validation_deferred", "timestamp": "2025-12-03T14:52:58.650845+00:00", "diseases": ["diabetes"], "message": "Ontology linking deferred to final validation stage."}
+{"event": "chat_message", "timestamp": "2025-12-03T14:52:58.651846+00:00", "role": "assistant", "content": "I understand you're working on diabetes. Do you have a medication? If so, which one? Still need: Collaborator, Product Development."}
+{"event": "chat_message", "timestamp": "2025-12-03T14:53:15.519886+00:00", "role": "user", "content": "No medication, no collaborator, no product development"}
+{"event": "llm_request", "timestamp": "2025-12-03T14:53:15.543540+00:00", "provider": "apollo", "model": "gpt-5-mini", "message_count": 5}
+{"event": "llm_response", "timestamp": "2025-12-03T14:53:22.755712+00:00", "provider": "apollo", "status": "ok"}
+{"event": "validation_deferred", "timestamp": "2025-12-03T14:53:22.757715+00:00", "diseases": ["diabetes"], "message": "Ontology linking deferred to final validation stage."}
+{"event": "chat_message", "timestamp": "2025-12-03T14:53:22.758713+00:00", "role": "assistant", "content": "Here is what I have captured:\n- Diseases: diabetes\n- Therapeutic Area: Metabolic Disorders\n- Medication: Not provided\n- Collaborator: No\n- Product Development: No\n\nAll required fields are filled. Please validate the purpose, then confirm it to generate the final payload."}
+{"event": "final_validation_prepare", "timestamp": "2025-12-03T14:53:30.325386+00:00", "diseases": ["diabetes"], "candidate_count": 1, "unmatched": 0}
+{"event": "shacl_validation_final", "timestamp": "2025-12-03T14:53:42.590310+00:00", "conforms": true, "disease_count": 1}
