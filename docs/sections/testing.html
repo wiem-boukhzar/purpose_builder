@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Testing Strategy – Purpose Creator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root { color-scheme: dark; --bg: radial-gradient(circle at top, #0c1221 0%, #020617 55%, #010409 100%); --card: rgba(15, 23, 42, 0.78); --border: rgba(148, 163, 184, 0.24); --text: #f8fafc; --muted: #94a3b8; --primary: #38bdf8; --accent: #f97316; }
+      body { margin: 0; background: var(--bg); font-family: "Inter", "Segoe UI", sans-serif; color: var(--text); line-height: 1.7; padding: 3.5rem 1rem 4rem; }
+      .container { max-width: 1040px; margin: 0 auto; }
+      a.back { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 0.9rem; border-radius: 12px; border: 1px solid rgba(148, 163, 184, 0.3); color: var(--primary); text-decoration: none; margin-bottom: 1.8rem; background: rgba(15, 23, 42, 0.55); }
+      a.back:hover { border-color: rgba(148, 163, 184, 0.6); }
+      header { text-align: center; margin-bottom: 2.6rem; }
+      header h1 { font-size: clamp(2.1rem, 4vw, 3rem); margin: 0; font-weight: 800; }
+      header p { color: var(--muted); margin: 0.75rem auto 0; max-width: 760px; }
+      .card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 2.5rem; box-shadow: 0 24px 48px -24px rgba(8, 47, 73, 0.6); }
+      h2 { margin-top: 0; font-size: 1.75rem; }
+      h3 { margin-top: 2rem; font-size: 1.25rem; color: var(--primary); }
+      table { width: 100%; border-collapse: collapse; margin: 1.8rem 0; background: rgba(2, 6, 23, 0.55); border-radius: 16px; overflow: hidden; }
+      thead { background: rgba(56, 189, 248, 0.12); }
+      th, td { padding: 0.95rem 1.05rem; border-bottom: 1px solid rgba(148, 163, 184, 0.2); text-align: left; font-size: 1.02rem; }
+      tbody tr:last-child td { border-bottom: none; }
+      th { color: var(--primary); font-weight: 600; }
+      code { background: rgba(2, 6, 23, 0.6); border-radius: 6px; padding: 0.15rem 0.35rem; }
+      pre { background: rgba(2, 6, 23, 0.62); border: 1px solid rgba(148, 163, 184, 0.25); border-radius: 14px; padding: 1rem 1.2rem; overflow-x: auto; color: #e2e8f0; }
+      ul { padding-left: 1.4rem; }
+      .note { background: rgba(56, 189, 248, 0.12); border-left: 4px solid var(--primary); padding: 1.1rem 1.35rem; border-radius: 16px; margin: 1.8rem 0; }
+      .grid { display: grid; gap: 1.35rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: 1.6rem; }
+      .pane { background: rgba(15, 23, 42, 0.78); border: 1px solid rgba(148, 163, 184, 0.22); border-radius: 18px; padding: 1.4rem 1.5rem; box-shadow: 0 16px 32px -22px rgba(8, 47, 73, 0.56); }
+      .pane h4 { margin: 0 0 0.4rem; color: var(--primary); font-size: 1.12rem; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a class="back" href="../DETAILED_OVERVIEW.html">&#8592; Back to Comprehensive Guide</a>
+      <header>
+        <h1>Testing Strategy</h1>
+        <p>Regression tests lean on the real ontology snapshot so that fuzzy matching, SHACL validation, and shortcut behaviours stay trustworthy.</p>
+      </header>
+
+      <div class="card">
+        <h2>Test Inventory</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>File</th>
+              <th>Focus</th>
+              <th>Key assertions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>tests/test_linker.py</code></td>
+              <td>RapidFuzz matching</td>
+              <td>“NSCLC” resolves to a non-small cell carcinoma label.</td>
+            </tr>
+            <tr>
+              <td><code>tests/test_validator.py</code></td>
+              <td>Specificity checking</td>
+              <td>Diabetes mellitus fails SHACL; type 2 passes after refinement.</td>
+            </tr>
+            <tr>
+              <td><code>tests/test_suggestions.py</code></td>
+              <td>Subclass coverage</td>
+              <td>Umbrella IRIs surface expected children (type 1/2, gestational, etc.).</td>
+            </tr>
+            <tr>
+              <td><code>tests/test_smoke.py</code></td>
+              <td>Conversation flow</td>
+              <td>Multiple diseases, misspellings, and numeric shortcuts stay coherent.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Running the Suite</h2>
+        <pre><code>python -m venv .venv
+source .venv/bin/activate
+python -m pytest -q</code></pre>
+        <div class="note">
+          Tests read the bundled <code>data/ontology/doid.owl</code>; ensure the file is present locally. Runtime ~15&nbsp;s on a modern laptop.
+        </div>
+
+        <h2>What to Add Next</h2>
+        <div class="grid">
+          <div class="pane">
+            <h4>Option shortcuts</h4>
+            <p>Create a fixture with numeric replies (“option 4”) to ensure <code>resolve_option_shortcut</code> keeps the state aligned with the displayed labels.</p>
+          </div>
+          <div class="pane">
+            <h4>Final validation reports</h4>
+            <p>Assert that <code>run_final_pyshacl_validation</code> produces a conforming payload before the JSON download is enabled.</p>
+          </div>
+          <div class="pane">
+            <h4>Telemetry assertions</h4>
+            <p>Patch <code>logging_utils.log_event</code> in tests to confirm that each LangGraph step emits the expected JSON payloads.</p>
+          </div>
+        </div>
+
+        <h2>Sample Failure Diagnosis</h2>
+        <pre><code>E   AssertionError: Expected 'type 2 diabetes mellitus' but got 'diabetes mellitus'
+
+Re-run with: pytest tests/test_validator.py -k type_2
+Inspect: logs/purpose_app.log  # validation_result payload contains offending IRIs
+</code></pre>
+        <p>Because tests use real ontology data, a failing fuzzy match often indicates the label index was rebuilt or the ontology snapshot changed. Re-run <code>build_label_index</code> manually to inspect available synonyms before adjusting thresholds.</p>
+      </div>
+    </div>
+  </body>
+</html>

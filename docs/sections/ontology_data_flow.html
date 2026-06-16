@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Ontology Data Flow – Purpose Creator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root { color-scheme: dark; --bg: radial-gradient(circle at top, #0b1220 0%, #020617 55%, #010409 100%); --card: rgba(15, 23, 42, 0.78); --border: rgba(148, 163, 184, 0.22); --text: #f8fafc; --muted: #94a3b8; --primary: #38bdf8; }
+      body { margin: 0; background: var(--bg); font-family: "Inter", "Segoe UI", sans-serif; color: var(--text); line-height: 1.7; padding: 3.5rem 1rem 4rem; }
+      .container { max-width: 960px; margin: 0 auto; }
+      a.back { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 0.9rem; border-radius: 12px; border: 1px solid rgba(148, 163, 184, 0.3); color: var(--primary); text-decoration: none; margin-bottom: 1.8rem; background: rgba(15, 23, 42, 0.55); }
+      a.back:hover { border-color: rgba(148, 163, 184, 0.6); }
+      header { text-align: center; margin-bottom: 2.4rem; }
+      header h1 { font-size: clamp(2.1rem, 4vw, 3rem); margin: 0; font-weight: 800; }
+      header p { color: var(--muted); margin: 0.75rem auto 0; max-width: 720px; }
+      .card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 2.4rem; box-shadow: 0 24px 48px -24px rgba(8, 47, 73, 0.6); }
+      h2 { margin-top: 0; font-size: 1.75rem; }
+      ol { padding-left: 1.4rem; }
+      code { background: rgba(2, 6, 23, 0.6); border-radius: 6px; padding: 0.15rem 0.35rem; }
+      pre { background: rgba(2, 6, 23, 0.6); border: 1px solid rgba(148, 163, 184, 0.25); border-radius: 14px; padding: 1rem 1.2rem; overflow-x: auto; color: #e2e8f0; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a class="back" href="../DETAILED_OVERVIEW.html">&#8592; Back to Comprehensive Guide</a>
+      <header>
+        <h1>Ontology Data Flow</h1>
+        <p>Walkthrough of what happens from the moment a disease string enters the system until validation finishes.</p>
+      </header>
+
+      <div class="card">
+        <h2>Step-by-step</h2>
+        <ol>
+          <li><strong>Load Disease Ontology</strong> – <code>load_graph()</code> parses <code>doid.owl</code>, caching the RDF graph (approx. 15k classes).</li>
+          <li><strong>Build indexes</strong> – <code>build_label_index</code> normalises labels; <code>build_child_map</code> notes subclass relationships.</li>
+          <li><strong>Fuzzy link</strong> – <code>link_many</code> compares the user string against the index using RapidFuzz token-set ratio.</li>
+          <li><strong>Specificity check</strong> – SHACL (<code>validate_diseases</code>) or child-map lookup ensures the chosen class is not an umbrella concept.</li>
+          <li><strong>Suggestions</strong> – If the concept is generic, <code>suggest_children</code> enumerates direct subclasses for refinement.</li>
+        </ol>
+
+        <h2>Example</h2>
+        <pre><code># user enters "NSCLC"
+results = link_many(["NSCLC"], LABEL_INDEX, MONDO_GRAPH)
+linked = results[0]
+assert linked.label == "lung non-small cell carcinoma"
+report = validate_diseases([linked.iri], MONDO_GRAPH)
+assert report.conforms  # concept has no immediate subclasses
+</code></pre>
+      </div>
+    </div>
+  </body>
+</html>

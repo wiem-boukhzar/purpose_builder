@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>File Reference Cheat Sheet – Purpose Creator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: radial-gradient(circle at top, #0c1221 0%, #020617 55%, #010409 100%);
+        --card: rgba(15, 23, 42, 0.78);
+        --border: rgba(148, 163, 184, 0.24);
+        --text: #f8fafc;
+        --muted: #94a3b8;
+        --primary: #38bdf8;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        font-family: "Inter", "Segoe UI", sans-serif;
+        color: var(--text);
+        line-height: 1.7;
+        padding: 3.5rem 1rem 4rem;
+      }
+      .container { max-width: 1080px; margin: 0 auto; }
+      a.back {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        padding: 0.55rem 0.9rem; border-radius: 12px;
+        border: 1px solid rgba(148, 163, 184, 0.3); color: var(--primary);
+        text-decoration: none; margin-bottom: 1.8rem; background: rgba(15, 23, 42, 0.55);
+      }
+      a.back:hover { border-color: rgba(148, 163, 184, 0.6); }
+      header { text-align: center; margin-bottom: 2.4rem; }
+      header h1 { font-size: clamp(2.1rem, 4vw, 3rem); margin: 0; font-weight: 800; }
+      header p { color: var(--muted); margin: 0.75rem auto 0; max-width: 760px; }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        padding: 2.5rem;
+        box-shadow: 0 24px 48px -24px rgba(8, 47, 73, 0.6);
+      }
+      h2 { margin-top: 0; font-size: 1.8rem; }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.8rem 0;
+        background: rgba(2, 6, 23, 0.55);
+        border-radius: 16px;
+        overflow: hidden;
+      }
+      thead { background: rgba(56, 189, 248, 0.12); }
+      th, td {
+        padding: 0.95rem 1.05rem;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+        text-align: left;
+        font-size: 1.02rem;
+      }
+      tbody tr:last-child td { border-bottom: none; }
+      th { color: var(--primary); font-weight: 600; }
+      code { background: rgba(2, 6, 23, 0.6); border-radius: 6px; padding: 0.15rem 0.35rem; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a class="back" href="../DETAILED_OVERVIEW.html">&#8592; Back to Comprehensive Guide</a>
+      <header>
+        <h1>File Reference Cheat Sheet</h1>
+        <p>Quick lookup for the modules, scripts, and assets that power the Purpose Creator stack.</p>
+      </header>
+
+      <div class="card">
+        <h2>Streamlit Entry Points</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Path</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>frontend/app.py</code></td>
+              <td>Hosted Streamlit app (SHACL validation, Capgemini LLM endpoint).</td>
+            </tr>
+            <tr>
+              <td><code>frontend/app.py</code></td>
+              <td>Local Streamlit app wired to Apollo backend; useful in air-gapped workshops.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Purpose Application Package</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Path</th>
+              <th>Highlights</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>purpose_app/common.py</code></td>
+              <td>LangGraph assembly, reply generation, session state helpers.</td>
+            </tr>
+            <tr>
+              <td><code>purpose_app/logging_utils.py</code></td>
+              <td>JSON logger; central hook for analytics and monitoring.</td>
+            </tr>
+            <tr>
+              <td><code>purpose_app/__init__.py</code></td>
+              <td>Exports <code>build_graph</code>, state models, and convenience functions.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Ontology Validation Package</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Path</th>
+              <th>Highlights</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>ontology_validation/ontology_loader.py</code></td>
+              <td>Loads DO graph, builds label index and child map, exposes singletons.</td>
+            </tr>
+            <tr>
+              <td><code>ontology_validation/disease_linker.py</code></td>
+              <td>RapidFuzz scoring, <code>LinkedDisease</code> / <code>UnknownDisease</code> models, label resolution.</td>
+            </tr>
+            <tr>
+              <td><code>ontology_validation/validator.py</code></td>
+              <td>SHACL validation entry point returning <code>ValidationReport</code>.</td>
+            </tr>
+            <tr>
+              <td><code>ontology_validation/suggestions.py</code></td>
+              <td>SPARQL queries for direct subclasses (refinement options).</td>
+            </tr>
+            <tr>
+              <td><code>ontology_validation/shapes.ttl</code></td>
+              <td>Two SHACL shapes: minimum disease count and generic concept block.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Documentation &amp; Assets</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Path</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>docs/DETAILED_OVERVIEW.html</code></td>
+              <td>Primary documentation hub with deep-dive subpages.</td>
+            </tr>
+            <tr>
+              <td><code>docs/sections/*.html</code></td>
+              <td>Topic-specific deep dives (LangGraph, ontology, testing, ops).</td>
+            </tr>
+            <tr>
+              <td><code>docs/SHACL_vs_Precomputed.md</code></td>
+              <td>Textual comparison of SHACL vs. child-map for policy discussions.</td>
+            </tr>
+            <tr>
+              <td><code>data/ontology/doid.owl</code></td>
+              <td>Pinned Disease Ontology export (used at runtime and in tests).</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Tests</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Path</th>
+              <th>Coverage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>tests/test_linker.py</code></td>
+              <td>Fuzzy matching, abbreviations, tie-breaking.</td>
+            </tr>
+            <tr>
+              <td><code>tests/test_validator.py</code></td>
+              <td>Generic vs. specific disease validation logic.</td>
+            </tr>
+            <tr>
+              <td><code>tests/test_suggestions.py</code></td>
+              <td>Child suggestion accuracy for umbrella diseases.</td>
+            </tr>
+            <tr>
+              <td><code>tests/test_smoke.py</code></td>
+              <td>End-to-end conversation sanity checks (multi-disease, typos).</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

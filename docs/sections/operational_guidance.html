@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Operational Guidance – Purpose Creator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: radial-gradient(circle at top, #0c1221 0%, #020617 55%, #010409 100%);
+        --card: rgba(15, 23, 42, 0.78);
+        --border: rgba(148, 163, 184, 0.24);
+        --text: #f8fafc;
+        --muted: #94a3b8;
+        --primary: #38bdf8;
+        --accent: #f97316;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        font-family: "Inter", "Segoe UI", sans-serif;
+        color: var(--text);
+        line-height: 1.7;
+        padding: 3.5rem 1rem 4rem;
+      }
+      .container { max-width: 1080px; margin: 0 auto; }
+      a.back {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        padding: 0.55rem 0.9rem; border-radius: 12px;
+        border: 1px solid rgba(148, 163, 184, 0.3); color: var(--primary);
+        text-decoration: none; margin-bottom: 1.8rem; background: rgba(15, 23, 42, 0.55);
+      }
+      a.back:hover { border-color: rgba(148, 163, 184, 0.6); }
+      header { text-align: center; margin-bottom: 2.5rem; }
+      header h1 { font-size: clamp(2.1rem, 4vw, 3rem); margin: 0; font-weight: 800; }
+      header p { color: var(--muted); margin: 0.75rem auto 0; max-width: 780px; }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        padding: 2.5rem;
+        box-shadow: 0 24px 48px -24px rgba(8, 47, 73, 0.6);
+      }
+      h2 { margin-top: 0; font-size: 1.8rem; }
+      h3 { margin-top: 2rem; font-size: 1.25rem; color: var(--primary); }
+      p, li { font-size: 1.05rem; }
+      ul { padding-left: 1.4rem; }
+      code { background: rgba(2, 6, 23, 0.6); border-radius: 6px; padding: 0.15rem 0.35rem; }
+      .grid { display: grid; gap: 1.4rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top: 1.8rem; }
+      .pane { background: rgba(15, 23, 42, 0.78); border: 1px solid rgba(148, 163, 184, 0.22); border-radius: 18px; padding: 1.4rem 1.5rem; box-shadow: 0 16px 32px -22px rgba(8, 47, 73, 0.56); }
+      .pane h4 { margin: 0 0 0.4rem; color: var(--primary); font-size: 1.12rem; }
+      .note { background: rgba(56, 189, 248, 0.12); border-left: 4px solid var(--primary); padding: 1.1rem 1.3rem; border-radius: 16px; margin: 1.8rem 0; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a class="back" href="../DETAILED_OVERVIEW.html">&#8592; Back to Comprehensive Guide</a>
+      <header>
+        <h1>Operational Guidance</h1>
+        <p>Keep the agent healthy in day-to-day operations: manage environments, watch telemetry, and know when to switch validation modes.</p>
+      </header>
+
+      <div class="card">
+        <h2>Platform Checklist</h2>
+        <div class="grid">
+          <div class="pane">
+            <h4>Environment hygiene</h4>
+            <ul>
+          <li>Create and activate a fresh Python environment (e.g., <code>python -m venv .venv</code>); pin <code>rapidfuzz</code>, <code>rdflib</code>, and <code>pyshacl</code>.</li>
+              <li>Store secrets with Streamlit’s <code>st.secrets</code> or environment variables; avoid embedding API keys in code.</li>
+            </ul>
+          </div>
+          <div class="pane">
+            <h4>Ontology assets</h4>
+            <ul>
+              <li>Confirm <code>data/ontology/doid.owl</code> matches the version string exported in final JSON.</li>
+              <li>Update the SHA/version in release notes if the ontology snapshot changes.</li>
+            </ul>
+          </div>
+          <div class="pane">
+            <h4>Telemetry</h4>
+            <ul>
+              <li><code>purpose_app/logging_utils.py</code> writes JSON lines to <code>logs/purpose_app.log</code> by default.</li>
+              <li>Ship the log directory to ELK, Splunk, or Azure Monitor for central dashboards.</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2>Key Operational Playbooks</h2>
+        <h3>Latency spikes</h3>
+        <ul>
+          <li>Inspect <code>validation_result</code> events; if final SHACL runs dominate latency, confirm users are not repeatedly triggering the “Run Final MONDO Validation” button.</li>
+          <li>Cache LangGraph results per message when demoing (Streamlit reruns can repeat validation otherwise).</li>
+        </ul>
+
+        <h3>Ontology mismatches</h3>
+        <ul>
+          <li>Users reporting “wrong subtype” likely selected a generic concept; confirm suggestions include the expected child.</li>
+          <li>Use <code>docs/SHACL_vs_Precomputed.md</code> to brief stakeholders on trade-offs before changing validation modes.</li>
+        </ul>
+
+        <h3>Governance &amp; export</h3>
+        <ul>
+          <li>Persist only the final purpose JSON and the SHACL report (if applicable) per requirements.</li>
+          <li>Review <code>docs/sections/file_reference.html</code> when onboarding new operators so they understand where artefacts live.</li>
+        </ul>
+
+        <div class="note">
+          Need deeper dives? See <a href="deployment_tips.html">Deployment Tips</a> for SSO/hosting patterns and <a href="next_steps.html">Next Steps</a> for roadmap ideas.
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Entry Points & Runtime Options – Purpose Creator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: radial-gradient(circle at top, #0f172a 0%, #020617 55%, #010409 100%);
+        --card: rgba(15, 23, 42, 0.78);
+        --border: rgba(148, 163, 184, 0.22);
+        --text: #f8fafc;
+        --muted: #94a3b8;
+        --primary: #38bdf8;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        font-family: "Inter", "Segoe UI", sans-serif;
+        color: var(--text);
+        line-height: 1.7;
+        padding: 3.5rem 1rem 4rem;
+      }
+      .container { max-width: 1000px; margin: 0 auto; }
+      a.back {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.55rem 0.9rem;
+        border-radius: 12px;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        color: var(--primary);
+        text-decoration: none;
+        margin-bottom: 1.8rem;
+        background: rgba(15, 23, 42, 0.55);
+      }
+      a.back:hover { border-color: rgba(148, 163, 184, 0.6); }
+      header { text-align: center; margin-bottom: 2.3rem; }
+      header h1 { font-size: clamp(2.1rem, 4vw, 3rem); margin: 0; font-weight: 800; }
+      header p { color: var(--muted); margin: 0.75rem auto 0; max-width: 700px; }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        padding: 2.3rem;
+        box-shadow: 0 24px 48px -24px rgba(8, 47, 73, 0.6);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.5rem 0 2rem;
+        background: rgba(2, 6, 23, 0.5);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+      th, td {
+        padding: 0.95rem 1.05rem;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+        text-align: left;
+      }
+      thead { background: rgba(56, 189, 248, 0.12); }
+      th { color: var(--primary); font-weight: 600; }
+      tbody tr:last-child td { border-bottom: none; }
+      h2 { margin-top: 0; font-size: 1.7rem; }
+      h3 { margin-top: 2rem; font-size: 1.25rem; color: var(--primary); }
+      ul { padding-left: 1.4rem; }
+      code { background: rgba(2, 6, 23, 0.6); border-radius: 6px; padding: 0.15rem 0.35rem; }
+      .example {
+        background: rgba(56, 189, 248, 0.12);
+        border-left: 3px solid var(--primary);
+        padding: 1rem 1.25rem;
+        border-radius: 14px;
+        color: var(--primary);
+        margin: 1.5rem 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a class="back" href="../DETAILED_OVERVIEW.html">&#8592; Back to Comprehensive Guide</a>
+      <header>
+        <h1>Entry Points &amp; Runtime Options</h1>
+        <p>Compare the four Streamlit entrypoints, their LLM connectivity, and how to switch between SHACL and child-map validation at runtime.</p>
+      </header>
+
+      <div class="card">
+        <h2>Entry Point Matrix</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>File</th>
+              <th>Primary use</th>
+              <th>LLM endpoint</th>
+              <th>Validation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>frontend/app.py</code></td>
+              <td>Internal deployment</td>
+              <td>Apollo (OpenAI-compatible)</td>
+              <td>SHACL (pySHACL)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Environment Variables</h3>
+        <ul>
+          <li><code>APOLLO_CLIENT_ID</code>, <code>APOLLO_CLIENT_SECRET</code> (and optional <code>APOLLO_TOKEN_URL</code>, <code>APOLLO_BASE_URL</code>, <code>APOLLO_MODEL</code>) &mdash; for Apollo deployments.</li>
+          <li><code>PURPOSE_LOG_PATH</code> (optional) &mdash; override default JSON log location.</li>
+        </ul>
+
+        <h3>Final Validation Flow</h3>
+        <ul>
+          <li>Interactive disease checks use the MONDO child map to keep the chat responsive.</li>
+          <li>When the user clicks “Run Final MONDO Validation”, the app runs pySHACL before enabling the JSON download.</li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Ontology &amp; Validation Layer – Purpose Creator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root { color-scheme: dark; --bg: radial-gradient(circle at top, #0c1221 0%, #020617 55%, #010409 100%); --card: rgba(15, 23, 42, 0.78); --border: rgba(148, 163, 184, 0.22); --text: #f8fafc; --muted: #94a3b8; --primary: #38bdf8; }
+      body { margin: 0; background: var(--bg); font-family: "Inter", "Segoe UI", sans-serif; color: var(--text); line-height: 1.7; padding: 3.5rem 1rem 4rem; }
+      .container { max-width: 1040px; margin: 0 auto; }
+      a.back { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 0.9rem; border-radius: 12px; border: 1px solid rgba(148, 163, 184, 0.3); color: var(--primary); text-decoration: none; margin-bottom: 1.8rem; background: rgba(15, 23, 42, 0.55); }
+      a.back:hover { border-color: rgba(148, 163, 184, 0.6); }
+      header { text-align: center; margin-bottom: 2.4rem; }
+      header h1 { font-size: clamp(2.1rem, 4vw, 3rem); margin: 0; font-weight: 800; }
+      header p { color: var(--muted); margin: 0.75rem auto 0; max-width: 740px; }
+      .card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 2.4rem; box-shadow: 0 24px 48px -24px rgba(8, 47, 73, 0.6); }
+      h2 { margin-top: 0; font-size: 1.75rem; }
+      h3 { margin-top: 2rem; font-size: 1.2rem; color: var(--primary); }
+      ul { padding-left: 1.4rem; }
+      code { background: rgba(2, 6, 23, 0.6); border-radius: 6px; padding: 0.15rem 0.35rem; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a class="back" href="../DETAILED_OVERVIEW.html">&#8592; Back to Comprehensive Guide</a>
+      <header>
+        <h1>Ontology &amp; Validation Layer</h1>
+        <p>Components under <code>ontology_validation/</code> that power disease linking, specificity validation, and refinement suggestions.</p>
+      </header>
+
+      <div class="card">
+        <h2>Modules</h2>
+        <h3><code>ontology_loader.py</code></h3>
+        <ul>
+          <li><code>load_graph(path="data/ontology/doid.owl")</code> parses the DO snapshot (cached via <code>lru_cache</code>).</li>
+          <li><code>build_label_index</code> collects <code>rdfs:label</code>, <code>skos:altLabel</code>, and <code>oboInOwl:hasExactSynonym</code> entries (English/default).</li>
+          <li><code>build_child_map</code> pre-computes subclass relationships (<code>HAS_CHILDREN</code>) reused by the child-map validator.</li>
+        </ul>
+
+        <h3><code>disease_linker.py</code></h3>
+        <ul>
+          <li><code>link_best</code> normalises input (ASCII fold, punctuation removal) and selects the highest-ranking label via RapidFuzz.</li>
+          <li><code>link_many</code> applies <code>link_best</code> to a list of terms, returning <code>LinkedDisease</code> or <code>UnknownDisease</code>.</li>
+          <li><code>label_for</code> retrieves prettified labels; results are cached for performance.</li>
+        </ul>
+
+        <h3><code>validator.py</code></h3>
+        <ul>
+          <li>Creates an RDF data graph with a single <code>ex:ResearchIntent</code> node.</li>
+          <li>Runs <code>pyshacl.validate</code> with <code>ontology_validation/shapes.ttl</code> to enforce specificity.</li>
+          <li>Returns <code>ValidationReport</code> containing <code>conforms</code>, <code>generic_concepts</code>, and <code>report_text</code>.</li>
+        </ul>
+
+        <h3><code>suggestions.py</code></h3>
+        <ul>
+          <li><code>suggest_children(iri)</code> enumerates direct subclasses (English labels) used to prompt for more specific diseases.</li>
+        </ul>
+
+        <h2>Key Assets</h2>
+        <ul>
+          <li><code>data/ontology/doid.owl</code> – pinned Disease Ontology snapshot (~26&nbsp;MB in RDF/XML).</li>
+          <li><code>ontology_validation/shapes.ttl</code> – SHACL shapes enforcing “at least one disease” and “no umbrella classes”.</li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

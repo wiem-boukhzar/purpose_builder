@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Telemetry & Logging – Purpose Creator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root { color-scheme: dark; --bg: radial-gradient(circle at top, #0b1220 0%, #020617 55%, #010409 100%); --card: rgba(15, 23, 42, 0.78); --border: rgba(148, 163, 184, 0.22); --text: #f8fafc; --muted: #94a3b8; --primary: #38bdf8; }
+      body { margin: 0; background: var(--bg); font-family: "Inter", "Segoe UI", sans-serif; color: var(--text); line-height: 1.7; padding: 3.5rem 1rem 4rem; }
+      .container { max-width: 960px; margin: 0 auto; }
+      a.back { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 0.9rem; border-radius: 12px; border: 1px solid rgba(148, 163, 184, 0.3); color: var(--primary); text-decoration: none; margin-bottom: 1.8rem; background: rgba(15, 23, 42, 0.55); }
+      a.back:hover { border-color: rgba(148, 163, 184, 0.6); }
+      header { text-align: center; margin-bottom: 2.4rem; }
+      header h1 { font-size: clamp(2.1rem, 4vw, 3rem); margin: 0; font-weight: 800; }
+      header p { color: var(--muted); margin: 0.75rem auto 0; max-width: 720px; }
+      .card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 2.4rem; box-shadow: 0 24px 48px -24px rgba(8, 47, 73, 0.6); }
+      h2 { margin-top: 0; font-size: 1.75rem; }
+      h3 { margin-top: 2rem; font-size: 1.2rem; color: var(--primary); }
+      table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; background: rgba(2, 6, 23, 0.5); border-radius: 14px; overflow: hidden; }
+      th, td { padding: 0.85rem 1rem; border-bottom: 1px solid rgba(148, 163, 184, 0.18); text-align: left; }
+      thead { background: rgba(56, 189, 248, 0.12); }
+      th { color: var(--primary); font-weight: 600; }
+      tbody tr:last-child td { border-bottom: none; }
+      code { background: rgba(2, 6, 23, 0.6); border-radius: 6px; padding: 0.15rem 0.35rem; }
+      pre { background: rgba(2, 6, 23, 0.6); border: 1px solid rgba(148, 163, 184, 0.25); border-radius: 14px; padding: 1rem 1.2rem; overflow-x: auto; color: #e2e8f0; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a class="back" href="../DETAILED_OVERVIEW.html">&#8592; Back to Comprehensive Guide</a>
+      <header>
+        <h1>Telemetry &amp; Logging</h1>
+        <p>All runtime events are recorded through <code>purpose_app/logging_utils.py</code>, enabling enterprise-grade observability.</p>
+      </header>
+
+      <div class="card">
+        <h2>Logger Configuration</h2>
+        <p>The logger initialises a <code>RotatingFileHandler</code> writing JSON lines to <code>logs/purpose_app.log</code> (override with <code>PURPOSE_LOG_PATH</code>). Each entry includes <code>timestamp</code>, <code>event</code>, and custom payload.</p>
+
+        <h2>Event Catalogue</h2>
+        <table>
+          <thead>
+            <tr><th>Event</th><th>Payload</th><th>Triggered by</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>chat_message</code></td><td><code>{"role": "user", "content": "type 2 diabetes", "display": "option 5 (type 2 diabetes)"}</code></td><td><code>add_message</code></td></tr>
+            <tr><td><code>llm_request</code></td><td><code>{"provider": "apollo", "model": "gpt-4o-mini", "message_count": 5}</code></td><td><code>call_local_model</code></td></tr>
+            <tr><td><code>llm_response</code></td><td><code>{"status": "ok"}</code> or <code>{"status": "error", "error": "Timeout"}</code></td><td>LLM wrapper</td></tr>
+            <tr><td><code>validation_result</code></td><td><code>{"diseases": [...], "linked": [...], "unknown": [...], "generic": [...], "conforms": true}</code></td><td><code>run_disease_validation</code></td></tr>
+            <tr><td><code>parse_error</code></td><td>Truncated snippet of raw output when JSON extraction fails.</td><td><code>coerce_to_schema</code></td></tr>
+          </tbody>
+        </table>
+
+        <h2>Sample Log Entry</h2>
+        <pre><code>{
+  "event": "validation_result",
+  "timestamp": "2024-10-28T13:42:55.183Z",
+  "diseases": ["type 2 diabetes mellitus", "obesity"],
+  "linked": [
+    {"iri": "http://purl.obolibrary.org/obo/DOID_9352", "label": "diabetes mellitus", "score": 100.0}
+  ],
+  "unknown": [],
+  "generic": [],
+  "conforms": true,
+  "cached": false
+}</code></pre>
+
+        <p>Forward these JSON lines to your observability stack (Splunk, ELK, Datadog) to monitor usage, detect ontology regressions, and alert on LLM failures.</p>
+      </div>
+    </div>
+  </body>
+</html>

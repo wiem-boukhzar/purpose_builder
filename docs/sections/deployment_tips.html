@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Deployment Tips – Purpose Creator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root { color-scheme: dark; --bg: radial-gradient(circle at top, #0c1221 0%, #020617 55%, #010409 100%); --card: rgba(15, 23, 42, 0.78); --border: rgba(148, 163, 184, 0.24); --text: #f8fafc; --muted: #94a3b8; --primary: #38bdf8; --accent: #f97316; }
+      body { margin: 0; background: var(--bg); font-family: "Inter", "Segoe UI", sans-serif; color: var(--text); line-height: 1.7; padding: 3.5rem 1rem 4rem; }
+      .container { max-width: 1040px; margin: 0 auto; }
+      a.back { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 0.9rem; border-radius: 12px; border: 1px solid rgba(148, 163, 184, 0.3); color: var(--primary); text-decoration: none; margin-bottom: 1.8rem; background: rgba(15, 23, 42, 0.55); }
+      a.back:hover { border-color: rgba(148, 163, 184, 0.6); }
+      header { text-align: center; margin-bottom: 2.5rem; }
+      header h1 { font-size: clamp(2.1rem, 4vw, 3rem); margin: 0; font-weight: 800; }
+      header p { color: var(--muted); margin: 0.75rem auto 0; max-width: 760px; }
+      .card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 2.5rem; box-shadow: 0 24px 48px -24px rgba(8, 47, 73, 0.6); }
+      h2 { margin-top: 0; font-size: 1.75rem; }
+      h3 { margin-top: 2rem; font-size: 1.25rem; color: var(--primary); }
+      p, li { font-size: 1.05rem; }
+      ul { padding-left: 1.4rem; }
+      code { background: rgba(2, 6, 23, 0.6); border-radius: 6px; padding: 0.15rem 0.35rem; }
+      .grid { display: grid; gap: 1.35rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top: 1.6rem; }
+      .pane { background: rgba(15, 23, 42, 0.78); border: 1px solid rgba(148, 163, 184, 0.22); border-radius: 18px; padding: 1.4rem 1.5rem; box-shadow: 0 16px 32px -22px rgba(8, 47, 73, 0.56); }
+      .pane h4 { margin: 0 0 0.4rem; color: var(--primary); font-size: 1.12rem; }
+      pre { background: rgba(2, 6, 23, 0.62); border: 1px solid rgba(148, 163, 184, 0.25); border-radius: 14px; padding: 1rem 1.2rem; overflow-x: auto; color: #e2e8f0; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a class="back" href="../DETAILED_OVERVIEW.html">&#8592; Back to Comprehensive Guide</a>
+      <header>
+        <h1>Deployment Tips</h1>
+        <p>Whether you ship to Streamlit Cloud, an internal VM, or a VDI lab, these patterns keep the purpose agent reliable.</p>
+      </header>
+
+      <div class="card">
+        <h2>Streamlit Cloud / PaaS</h2>
+        <ul>
+          <li>Bundle <code>data/ontology/doid.owl</code> in the repo; Streamlit caches the 20&nbsp;MB file but cold starts take ~8&nbsp;s.</li>
+          <li>Use <code>requirements.txt</code>; avoid system packages that the managed runtime cannot install.</li>
+          <li>Store secrets via <code>st.secrets</code>; rotate API keys quarterly.</li>
+        </ul>
+
+        <h2>Enterprise VM / Docker</h2>
+        <div class="grid">
+          <div class="pane">
+            <h4>Container recipe</h4>
+            <pre><code>FROM python:3.10-slim
+WORKDIR /app
+COPY . /app
+RUN python -m venv /opt/venv \
+ && /opt/venv/bin/pip install --upgrade pip \
+ && /opt/venv/bin/pip install -r requirements.txt
+ENV PATH="/opt/venv/bin:$PATH"
+ENV STREAMLIT_SERVER_PORT=8501
+CMD ["python", "-m", "streamlit", "run", "frontend/app.py"]</code></pre>
+          </div>
+          <div class="pane">
+            <h4>Networking</h4>
+            <ul>
+          <li>Whitelist outbound HTTPS to the Apollo/OpenAI-compatible endpoint.</li>
+              <li>Lock down inbound traffic to the Streamlit port via security groups.</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2>Authentication</h2>
+        <ul>
+          <li>Pair Streamlit with corporate SSO (e.g., Azure AD) using reverse proxies such as Nginx + Auth0 or Azure Front Door.</li>
+          <li>If embedding into an internal portal, expose the LangGraph workflow via a FastAPI microservice and keep Streamlit for admin tooling.</li>
+        </ul>
+
+        <h2>Runtime switching</h2>
+        <ul>
+          <li>Record the chosen mode in <code>logs/purpose_app.log</code> so audits know which validator was active.</li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

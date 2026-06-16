@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Session State Guide – Purpose Creator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: radial-gradient(circle at top, #0b1220 0%, #020617 55%, #010409 100%);
+        --card: rgba(15, 23, 42, 0.78);
+        --border: rgba(148, 163, 184, 0.22);
+        --text: #f8fafc;
+        --muted: #94a3b8;
+        --primary: #38bdf8;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        font-family: "Inter", "Segoe UI", sans-serif;
+        color: var(--text);
+        line-height: 1.7;
+        padding: 3.5rem 1rem 4rem;
+      }
+      .container { max-width: 960px; margin: 0 auto; }
+      a.back {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        padding: 0.55rem 0.9rem; border-radius: 12px;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        color: var(--primary); text-decoration: none;
+        margin-bottom: 1.8rem; background: rgba(15, 23, 42, 0.55);
+      }
+      a.back:hover { border-color: rgba(148, 163, 184, 0.6); }
+      header { text-align: center; margin-bottom: 2.4rem; }
+      header h1 { margin: 0; font-size: clamp(2.1rem, 4vw, 3rem); font-weight: 800; }
+      header p { color: var(--muted); margin: 0.75rem auto 0; max-width: 700px; }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        padding: 2.3rem;
+        box-shadow: 0 24px 48px -24px rgba(8, 47, 73, 0.6);
+      }
+      h2 { margin-top: 0; font-size: 1.7rem; }
+      h3 { margin-top: 2rem; font-size: 1.25rem; color: var(--primary); }
+      table {
+        width: 100%; border-collapse: collapse; margin: 1.5rem 0;
+        background: rgba(2, 6, 23, 0.5); border-radius: 14px; overflow: hidden;
+      }
+      th, td {
+        padding: 0.8rem 1rem; border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+        text-align: left; font-size: 0.98rem;
+      }
+      thead { background: rgba(56, 189, 248, 0.12); }
+      th { color: var(--primary); font-weight: 600; }
+      tbody tr:last-child td { border-bottom: none; }
+      code { background: rgba(2, 6, 23, 0.6); border-radius: 6px; padding: 0.15rem 0.35rem; }
+      .example {
+        background: rgba(56, 189, 248, 0.12);
+        border-left: 3px solid var(--primary);
+        padding: 1rem 1.25rem;
+        border-radius: 14px;
+        color: var(--primary);
+        margin: 1.5rem 0 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a class="back" href="../DETAILED_OVERVIEW.html">&#8592; Back to Comprehensive Guide</a>
+      <header>
+        <h1>Session State Reference</h1>
+        <p>Every user interaction updates Streamlit's <code>session_state</code>. Understanding these keys is essential for extending the agent.</p>
+      </header>
+
+      <div class="card">
+        <h2>Core Conversation Keys</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Description</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>messages</code></td>
+              <td>Ordered list of chat messages. Each item contains the canonical <code>content</code> and optional <code>display</code> (e.g., “option 2 (type 2 diabetes mellitus)”).</td>
+              <td><code>{"role": "user", "content": "type 1 diabetes mellitus", "display": "option 4 (type 1 diabetes mellitus)"}</code></td>
+            </tr>
+            <tr>
+              <td><code>structured_data</code></td>
+              <td>Normalised purpose fields (diseases, TA, medication, collaborator, product_development).</td>
+              <td><code>{"diseases": ["type 1 diabetes mellitus"], "TA": "Metabolic Disorders"}</code></td>
+            </tr>
+            <tr>
+              <td><code>thinking</code></td>
+              <td>Boolean spinner flag while awaiting an LLM response.</td>
+              <td><code>True</code> immediately after the user submits a message.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Validation Keys</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Description</th>
+              <th>When updated</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>ontology_linked_diseases</code></td>
+              <td>List of dictionaries containing <code>id</code> (DOID), <code>iri</code>, <code>label</code>, <code>score</code>, and <code>source_text</code>.</td>
+              <td>After every successful call to <code>link_many()</code>.</td>
+            </tr>
+            <tr>
+              <td><code>ontology_generic_diseases</code></td>
+              <td>Generic parents needing refinement, including child suggestions (<code>{"label": …, "suggestions": [{"iri": …}]}</code>).</td>
+              <td>After SHACL or child-map validation detects subclasses.</td>
+            </tr>
+            <tr>
+              <td><code>ontology_unknown_diseases</code></td>
+              <td>Unknown terms with fuzzy suggestions for the assistant to surface.</td>
+              <td>Whenever a disease string falls below the RapidFuzz threshold.</td>
+            </tr>
+            <tr>
+              <td><code>ontology_validation_report</code></td>
+              <td>Human-readable validation summary (“Validation executed with pre-computed subclass map…” or SHACL report text).</td>
+              <td>Each validation cycle.</td>
+            </tr>
+            <tr>
+              <td><code>validation_cached</code>, <code>validation_locked</code>, <code>validated_diseases_key</code></td>
+              <td>Track whether SHACL results can be reused for a given disease list.</td>
+              <td>Set during the first validation pass; reset if the disease list changes.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Conversation Enhancements</h2>
+        <ul>
+          <li><code>option_shortcuts</code> – stores the current numbered suggestions (generic or unknown prompts). Enables replies like “option 3”.</li>
+          <li><code>acknowledged_diseases</code> – prevents repeating the “I understand you’re working on …” acknowledgement.</li>
+          <li><code>final_purpose_payload</code> – latest valid JSON payload ready for export/download.</li>
+          <li><code>validation_report_payload</code> – JSON serialisation of the validation summary for download.</li>
+        </ul>
+
+        <div class="example">
+          <strong>Example session snapshot:</strong>
+          <code>{"messages": [{"role": "user", "content": "type 2 diabetes mellitus"}, {"role": "assistant", "content": "Great, do you have a medication?", "display": "Great, do you have a medication?"}], "ontology_generic_diseases": [], "option_shortcuts": null}</code>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Purpose Creator – Comprehensive Technical Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-X8ZpR5LxfIKe60xLZ5M37OaCX7Aj1MwVz8mghHkYSyv6z+4NIOpp4lSbEoKANWRPklDje1fbwK9f6xWz7q4GaQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: radial-gradient(circle at top, #0f172a 0%, #020617 55%, #010409 100%);
+        --card: rgba(15, 23, 42, 0.72);
+        --card-highlight: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(59, 130, 246, 0.08));
+        --border: rgba(148, 163, 184, 0.28);
+        --border-strong: rgba(94, 234, 212, 0.45);
+        --text: #f8fafc;
+        --muted: #94a3b8;
+        --primary: #38bdf8;
+        --accent: #f97316;
+        --success: #34d399;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.7;
+        padding: 3.5rem 1rem 4rem;
+      }
+      .container {
+        max-width: 1160px;
+        margin: 0 auto;
+      }
+      header {
+        text-align: center;
+        margin-bottom: 3.5rem;
+      }
+      header h1 {
+        font-size: clamp(2.4rem, 4vw, 3.1rem);
+        margin: 0;
+        font-weight: 800;
+        letter-spacing: 0.01em;
+      }
+      header p {
+        margin: 0.75rem auto 0;
+        color: var(--muted);
+        max-width: 680px;
+        font-size: 1.05rem;
+      }
+      section {
+        background: var(--card);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        padding: 2.5rem;
+        margin-bottom: 2.2rem;
+        box-shadow: 0 28px 60px -20px rgba(8, 47, 73, 0.55);
+      }
+      section h2 {
+        margin-top: 0;
+        font-size: 1.95rem;
+        font-weight: 700;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+        padding-bottom: 0.85rem;
+      }
+      section h3 {
+        font-size: 1.4rem;
+        margin-top: 2.2rem;
+      }
+      section h4 {
+        font-size: 1.2rem;
+        margin-top: 1.6rem;
+        color: var(--primary);
+      }
+      section h2 a,
+      section h3 a {
+        color: inherit;
+        text-decoration: none;
+      }
+      section h2 a:hover,
+      section h3 a:hover {
+        color: var(--primary);
+        text-shadow: 0 0 12px rgba(56, 189, 248, 0.45);
+      }
+      p, li {
+        font-size: 1.05rem;
+      }
+      ul, ol {
+        padding-left: 1.4rem;
+      }
+      code, pre {
+        font-family: "JetBrains Mono", "Fira Code", monospace;
+        background: rgba(2, 6, 23, 0.55);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        border-radius: 14px;
+        padding: 1.1rem 1.3rem;
+        color: #f8fafc;
+        overflow-x: auto;
+      }
+      code.inline {
+        padding: 0.18rem 0.45rem;
+        border-radius: 6px;
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        background: rgba(30, 41, 59, 0.65);
+        font-size: 0.95rem;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.8rem 0;
+        background: rgba(15, 23, 42, 0.7);
+        border-radius: 16px;
+        overflow: hidden;
+      }
+      table thead {
+        background: rgba(56, 189, 248, 0.1);
+      }
+      th, td {
+        padding: 0.95rem 1.1rem;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+        text-align: left;
+        font-size: 1rem;
+      }
+      th {
+        font-weight: 600;
+        color: var(--primary);
+        letter-spacing: 0.02em;
+      }
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+      .note {
+        background: var(--card-highlight);
+        border-left: 4px solid var(--primary);
+        padding: 1.1rem 1.35rem;
+        margin: 1.8rem 0;
+        border-radius: 14px;
+        color: var(--primary);
+      }
+      .layer-stack {
+        position: relative;
+        padding-left: 2.5rem;
+        margin: 2rem 0 0;
+      }
+      .layer-stack::before {
+        content: "";
+        position: absolute;
+        top: 0.5rem;
+        bottom: 0.5rem;
+        left: 1.1rem;
+        width: 2px;
+        background: linear-gradient(180deg, rgba(56, 189, 248, 0) 0%, rgba(56, 189, 248, 0.5) 45%, rgba(59, 130, 246, 0.5) 55%, rgba(56, 189, 248, 0) 100%);
+      }
+      .layer {
+        position: relative;
+        margin-bottom: 1.6rem;
+        padding: 1.2rem 1.6rem;
+        background: rgba(15, 23, 42, 0.78);
+        border: 1px solid rgba(148, 163, 184, 0.24);
+        border-radius: 16px;
+        box-shadow: 0 18px 35px -20px rgba(8, 47, 73, 0.5);
+      }
+      .layer::before {
+        content: "";
+        position: absolute;
+        top: 1.4rem;
+        left: -1.55rem;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 2px solid rgba(56, 189, 248, 0.8);
+        background: #0b1120;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+      }
+      .layer h4 {
+        margin: 0 0 0.4rem;
+        color: var(--primary);
+        font-size: 1.1rem;
+      }
+      .layer ul {
+        margin: 0;
+      }
+      .grid {
+        display: grid;
+        gap: 1.35rem;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        margin-top: 1.6rem;
+      }
+      .card {
+        background: rgba(15, 23, 42, 0.72);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        border-radius: 18px;
+        padding: 1.55rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.7rem;
+        box-shadow: 0 18px 38px -22px rgba(8, 47, 73, 0.55);
+      }
+      .card h4 {
+        margin: 0;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      .card h4 i {
+        color: var(--primary);
+      }
+      .card p, .card ul {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.98rem;
+      }
+      .workflow {
+        display: grid;
+        gap: 1.2rem;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        margin-top: 1.6rem;
+      }
+      .workflow-step {
+        position: relative;
+        background: rgba(15, 23, 42, 0.78);
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 18px;
+        padding: 1.35rem 1.4rem 1.4rem;
+        box-shadow: 0 18px 36px -22px rgba(8, 47, 73, 0.52);
+      }
+      .workflow-step::before {
+        content: attr(data-step);
+        position: absolute;
+        top: -0.85rem;
+        left: 1.3rem;
+        padding: 0.35rem 0.75rem;
+        border-radius: 999px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: #0b1120;
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.92), rgba(96, 165, 250, 0.92));
+        box-shadow: 0 0 16px rgba(56, 189, 248, 0.45);
+      }
+      .workflow-step h5 {
+        margin: 0 0 0.45rem;
+        font-size: 1.12rem;
+        color: var(--primary);
+      }
+      .workflow-step ul {
+        margin: 0.35rem 0 0;
+        color: var(--muted);
+        font-size: 0.95rem;
+        padding-left: 1.15rem;
+      }
+      .pipeline {
+        display: flex;
+        flex-direction: column;
+        gap: 1.1rem;
+        margin-top: 1.5rem;
+      }
+      .pipeline-stage {
+        display: flex;
+        align-items: flex-start;
+        gap: 1.1rem;
+      }
+      .pipeline-stage .badge {
+        flex-shrink: 0;
+        width: 46px;
+        height: 46px;
+        border-radius: 15px;
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.92), rgba(59, 130, 246, 0.92));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0b1120;
+        font-weight: 700;
+        font-size: 1.15rem;
+        box-shadow: 0 12px 28px -18px rgba(59, 130, 246, 0.6);
+      }
+      .pipeline-stage .content {
+        flex: 1;
+        background: rgba(15, 23, 42, 0.75);
+        border: 1px solid rgba(148, 163, 184, 0.24);
+        border-radius: 18px;
+        padding: 1.15rem 1.3rem;
+        box-shadow: 0 16px 32px -22px rgba(8, 47, 73, 0.56);
+      }
+      .pipeline-stage .content h5 {
+        margin: 0 0 0.35rem;
+        font-size: 1.08rem;
+        color: var(--primary);
+      }
+      .pipeline-stage .content p {
+        margin: 0;
+        font-size: 0.96rem;
+        color: var(--muted);
+      }
+      footer {
+        text-align: center;
+        color: var(--muted);
+        margin-top: 3rem;
+        font-size: 0.95rem;
+      }
+      footer a {
+        color: var(--primary);
+        text-decoration: none;
+      }
+      footer a:hover {
+        text-decoration: underline;
+      }
+      @media (max-width: 768px) {
+        body { padding: 2.5rem 1rem 3rem; }
+        section { padding: 1.9rem; }
+        .layer-stack { padding-left: 1.9rem; }
+        .layer::before { left: -1.3rem; }
+        pre { font-size: 0.9rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1><i class="fa-solid fa-flask-vial"></i> Purpose Creator – Comprehensive Technical Guide</h1>
+        <p>Deep-dive into the Streamlit, LangGraph, and Disease Ontology powered agent for pharma workflows.</p>
+      </header>
+
+      <section>
+        <h2><a href="sections/system_landscape.html">1. System Landscape</a></h2>
+        <p>This overview combines the architectural tiers and highlights the responsibilities of each layer.</p>
+        <div class="layer-stack">
+          <div class="layer">
+            <h4><i class="fa-regular fa-user"></i> User / Stakeholder</h4>
+            <ul>
+              <li>Pharma researchers entering disease concepts through chat.</li>
+              <li>Regulatory/product teams consuming the exported JSON payload.</li>
+            </ul>
+          </div>
+          <div class="layer">
+            <h4><i class="fa-solid fa-desktop"></i> Streamlit UI (frontend/app.py / frontend/app.py / …)</h4>
+            <ul>
+              <li>Chat display, input form, auto-scroll, and “option N” shortcuts.</li>
+              <li>Structured summary panel with validation messages and downloads.</li>
+            </ul>
+          </div>
+          <div class="layer">
+            <h4><i class="fa-solid fa-diagram-project"></i> Purpose Application Layer</h4>
+            <ul>
+              <li>LangGraph workflow orchestrating generate → parse → validate nodes.</li>
+              <li>Logging utilities (`purpose_app/logging_utils.py`) emitting JSON telemetry.</li>
+            </ul>
+          </div>
+          <div class="layer">
+            <h4><i class="fa-solid fa-code-branch"></i> Ontology &amp; Validation Services</h4>
+            <ul>
+              <li>Ontology loader + label index (synonyms, alt labels, exact matches).</li>
+              <li>RapidFuzz-based disease linker, SHACL validator, and subclass suggestions.</li>
+              <li>Pre-computed child map for low-latency validation in no-SHACL mode.</li>
+            </ul>
+          </div>
+          <div class="layer">
+            <h4><i class="fa-solid fa-database"></i> Data, Config &amp; Infra</h4>
+            <ul>
+              <li><code class="inline">data/ontology/doid.owl</code> snapshot and SHACL shapes.</li>
+              <li>Python dependencies (`requirements.txt`, set up in a fresh virtual environment).</li>
+              <li>Environment variables for Apollo/OpenAI access and logging path overrides.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2><a href="sections/entry_points.html">2. Entry Points &amp; Runtime Options</a></h2>
+        <p>Four Streamlit entrypoints cover hosted vs. local deployment and SHACL vs. pre-computed validation.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>File</th>
+              <th>Description</th>
+              <th>LLM Endpoint</th>
+              <th>Validation Mode</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="inline">frontend/app.py</code></td>
+              <td>Hosted Streamlit UI</td>
+              <td>Capgemini OpenAI-compatible</td>
+              <td>SHACL</td>
+            </tr>
+            <tr>
+              <td><code class="inline">frontend/app.py</code></td>
+              <td>Local UI</td>
+              <td>Model endpoint</td>
+              <td>SHACL</td>
+            </tr>
+            <tr>
+              <td><code class="inline"></code></td>
+              <td>Hosted UI without SHACL</td>
+              <td>Capgemini endpoint</td>
+              <td>Pre-computed child map</td>
+            </tr>
+            <tr>
+              <td><code class="inline"></code></td>
+              <td>Local UI without SHACL</td>
+              <td>Apollo API</td>
+              <td>Pre-computed child map</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3><a href="sections/session_state.html">Session State Highlights</a></h3>
+        <ul>
+          <li><strong><code class="inline">messages</code></strong> – stores canonical user/assistant content plus optional display string (for “option 4” style replies).</li>
+          <li><strong><code class="inline">ontology_* keys</code></strong> – track linked concepts, outstanding generic parents, and unknown terms with suggestions.</li>
+          <li><strong><code class="inline">validation_cached / validation_locked / validated_diseases_key</code></strong> – prevent repeated SHACL evaluations for unchanged disease lists.</li>
+          <li><strong><code class="inline">option_shortcuts</code></strong> – keeps the currently displayed numeric suggestions so the next reply can reference them.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2><a href="sections/purpose_core.html">3. Purpose Application Core</a></h2>
+        <div class="note"><i class="fa-solid fa-info-circle"></i> Core workflow logic lives in <code class="inline">purpose_app/common.py</code>. Streamlit files orchestrate UI layout and delegate all processing.</div>
+
+        <h3><a href="sections/langgraph_workflow.html">3.1 LangGraph Workflow</a></h3>
+        <p>The conversation loop is implemented as a simple LangGraph pipeline whose nodes mutate <code class="inline">session_state</code>.</p>
+        <div class="workflow">
+          <div class="workflow-step" data-step="1">
+            <h5><i class="fa-regular fa-message"></i> generate → <code class="inline">call_*_model</code></h5>
+            <ul>
+              <li>Compose instructions + full conversation context for the LLM.</li>
+              <li>Emit <code class="inline">llm_request</code>/<code class="inline">llm_response</code> telemetry.</li>
+              <li>Store the raw model reply in <code class="inline">raw_response</code>.</li>
+            </ul>
+          </div>
+          <div class="workflow-step" data-step="2">
+            <h5><i class="fa-solid fa-code"></i> parse → <code class="inline">coerce_to_schema</code></h5>
+            <ul>
+              <li>Extract the JSON payload from the raw completion.</li>
+              <li>Normalise diseases, yes/no answers, medication strings.</li>
+              <li>Log <code class="inline">parse_error</code> if deserialisation fails.</li>
+            </ul>
+          </div>
+          <div class="workflow-step" data-step="3">
+            <h5><i class="fa-solid fa-dna"></i> validate → <code class="inline">run_disease_validation</code></h5>
+            <ul>
+              <li>RapidFuzz linking against the ontology index.</li>
+              <li>SHACL specificity check (or child-map shortcut) with caching.</li>
+              <li>Populate linked/unknown/generic lists and emit <code class="inline">validation_result*</code> logs.</li>
+            </ul>
+          </div>
+          <div class="workflow-step" data-step="4">
+            <h5><i class="fa-solid fa-check"></i> end → merge</h5>
+            <ul>
+              <li>LangGraph END node returns a diff merged into <code class="inline">session_state</code>.</li>
+              <li>Streamlit renders the next assistant prompt and structured summary.</li>
+              <li>Option shortcuts enable quick replies like “option 4”.</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3><a href="sections/core_helpers.html">3.2 Essential Helpers</a></h3>
+        <div class="grid">
+          <div class="card">
+            <h4><i class="fa-solid fa-sitemap"></i> run_disease_validation</h4>
+            <p>Links diseases, runs SHACL (or child-map) checks, populates session state, and emits <code class="inline">validation_result</code> logs.</p>
+          </div>
+          <div class="card">
+            <h4><i class="fa-solid fa-comments"></i> build_assistant_reply</h4>
+            <p>Guides the conversation: prompts for subtypes, lists remaining fields, and registers numeric shortcuts for quick selections.</p>
+          </div>
+          <div class="card">
+            <h4><i class="fa-solid fa-file-export"></i> build_purpose_payload</h4>
+            <p>Generates the final JSON export capturing DO IDs, labels, and user-supplied metadata (medication, collaborator, product development, TA).</p>
+          </div>
+          <div class="card">
+            <h4><i class="fa-solid fa-star"></i> resolve_option_shortcut</h4>
+            <p>Maps “option 3” style replies to the underlying suggestion before invoking the LangGraph pipeline.</p>
+          </div>
+        </div>
+
+        <h3><a href="sections/telemetry.html">3.3 Telemetry</a></h3>
+        <ul>
+          <li><code class="inline">purpose_app/logging_utils.py</code> sets up a rotating JSON log (override location with <code class="inline">PURPOSE_LOG_PATH</code>).</li>
+          <li>Emitted events:
+            <ul>
+              <li><code class="inline">chat_message</code> – role, canonical content, display text (if any).</li>
+              <li><code class="inline">llm_request</code> / <code class="inline">llm_response</code> – provider, model, message count, status, error payload.</li>
+              <li><code class="inline">parse_error</code> – truncated snippet when JSON extraction fails.</li>
+            </ul>
+          </li>
+          <li>Logs can be forwarded to Splunk/ELK/Grafana for observability and alerting.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2><a href="sections/ontology_layer.html">4. Ontology &amp; Validation Layer</a></h2>
+        <p>The ontology layer handles RDF parsing, label indexing, fuzzy matching, and specificity validation.</p>
+
+        <h3><a href="sections/ontology_data_flow.html">4.1 Data Flow</a></h3>
+        <p>Loading, indexing, and validating diseases flows through the ontology layer as a staged pipeline:</p>
+        <div class="pipeline">
+          <div class="pipeline-stage">
+            <div class="badge">1</div>
+            <div class="content">
+              <h5>Ontology bootstrap</h5>
+              <p><code class="inline">load_graph()</code> parses <code class="inline">doid.owl</code>, caches the RDF graph, and records version info.</p>
+            </div>
+          </div>
+          <div class="pipeline-stage">
+            <div class="badge">2</div>
+            <div class="content">
+              <h5>Index construction</h5>
+              <p><code class="inline">build_label_index()</code> normalises English labels, alt labels, and exact synonyms; <code class="inline">build_child_map()</code> records subclass existence for fast lookups.</p>
+            </div>
+          </div>
+          <div class="pipeline-stage">
+            <div class="badge">3</div>
+            <div class="content">
+              <h5>Fuzzy linking</h5>
+              <p><code class="inline">link_many()</code> maps user disease strings to <code class="inline">LinkedDisease</code> (IRI/label/score) or <code class="inline">UnknownDisease</code> (original text + suggestions).</p>
+            </div>
+          </div>
+          <div class="pipeline-stage">
+            <div class="badge">4</div>
+            <div class="content">
+              <h5>Specificity validation</h5>
+              <p>Default path: <code class="inline">validate_diseases()</code> runs SHACL (RDFS inference + SPARQL). Optional path: <code class="inline">HAS_CHILDREN</code> lookup offers near-instant results.</p>
+            </div>
+          </div>
+          <div class="pipeline-stage">
+            <div class="badge">5</div>
+            <div class="content">
+              <h5>Subtype suggestions</h5>
+              <p><code class="inline">suggest_children()</code> queries direct subclasses of umbrella concepts so the chat can present numbered refinements.</p>
+            </div>
+          </div>
+        </div>
+
+        <h3><a href="sections/shacl_rules.html">4.2 SHACL Rule Summary</a></h3>
+        <ul>
+          <li><strong><code class="inline">ex:ResearchIntentShape</code></strong> – requires at least one <code class="inline">ex:diseaseConcept</code>.</li>
+          <li><strong><code class="inline">ex:DiseaseSpecificityShape</code></strong> – SPARQL constraint: “<code class="inline">?child rdfs:subClassOf $this</code>” flags umbrella classes.</li>
+        </ul>
+
+        <h3><a href="sections/shacl_vs_childmap.html">4.3 SHACL vs. Pre-computed Child Map</a></h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Aspect</th>
+              <th>SHACL</th>
+              <th>Pre-computed child map</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Runtime cost</td>
+              <td>Higher (RDFS inference + SPARQL)</td>
+              <td>Minimal (dictionary lookup)</td>
+            </tr>
+            <tr>
+              <td>Extensibility</td>
+              <td>Declarative — add new shapes without code</td>
+              <td>Requires bespoke Python/SPARQL changes</td>
+            </tr>
+            <tr>
+              <td>Auditability</td>
+              <td>Standard SHACL report graph</td>
+              <td>Custom logs only</td>
+            </tr>
+            <tr>
+              <td>Best suited for</td>
+              <td>Regulated, compliance-focused deployments</td>
+              <td>Rapid prototyping or latency-sensitive demos</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2><a href="sections/testing.html">5. Testing Strategy</a></h2>
+        <p>Run tests via <code class="inline">python -m pytest</code> inside an activated virtual environment. They operate on the real Disease Ontology snapshot.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Test</th>
+              <th>Coverage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="inline">tests/test_linker.py</code></td>
+              <td>Abbreviations (NSCLC) and ambiguous inputs (diabetes → diabetes mellitus).</td>
+            </tr>
+            <tr>
+              <td><code class="inline">tests/test_suggestions.py</code></td>
+              <td>Subclass suggestions (lung cancer variants).</td>
+            </tr>
+            <tr>
+              <td><code class="inline">tests/test_validator.py</code></td>
+              <td>SHACL specificity (diabetes mellitus fails, subtype passes).</td>
+            </tr>
+            <tr>
+              <td><code class="inline">tests/test_smoke.py</code></td>
+              <td>Smoke scenarios (multiple diseases, misspellings, unknown terms).</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2><a href="sections/operational_guidance.html">6. Operational Guidance</a></h2>
+        <h3><a href="sections/deployment_tips.html">6.1 Deployment Tips</a></h3>
+        <ul>
+          <li>Create a fresh virtual environment (e.g., <code class="inline">python -m venv .venv</code>) and install dependencies with the bundled <code class="inline">requirements.txt</code>.</li>
+          <li>Provide <code class="inline">APOLLO_CLIENT_ID</code> / <code class="inline">APOLLO_CLIENT_SECRET</code> (and optional <code class="inline">APOLLO_TOKEN_URL</code>, <code class="inline">APOLLO_BASE_URL</code>, <code class="inline">APOLLO_MODEL</code>) for Apollo access.</li>
+          <li>Ensure <code class="inline">logs/</code> is writable (or set <code class="inline">PURPOSE_LOG_PATH</code>) to persist JSON telemetry.</li>
+          <li>For enterprise rollout, front the UX with corporate SSO or migrate the workflow into a backend service that Streamlit calls.</li>
+        </ul>
+
+        <h3><a href="sections/next_steps.html">6.2 Suggested Next Steps</a></h3>
+        <ul>
+          <li>Ship logs to a central observability stack for monitoring latency, unknown-term frequency, and validation errors.</li>
+          <li>Automate nightly smoke tests to detect ontology or prompt regressions.</li>
+          <li>Extend the SHACL shapes as new business rules emerge (e.g., therapeutic area consistency checks).</li>
+          <li>Consider trimming the ontology with ROBOT if memory footprint or startup latency becomes problematic.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2><a href="sections/file_reference.html">7. File Reference Cheat Sheet</a></h2>
+        <div class="grid">
+          <div class="card">
+            <h4><i class="fa-solid fa-desktop"></i> Streamlit Entry Points</h4>
+            <ul>
+              <li><code class="inline">frontend/app.py</code> / <code class="inline"></code></li>
+              <li><code class="inline">frontend/app.py</code> / <code class="inline"></code></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4><i class="fa-solid fa-diagram-project"></i> Purpose Core</h4>
+            <ul>
+              <li><code class="inline">purpose_app/common.py</code></li>
+              <li><code class="inline">purpose_app/logging_utils.py</code></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4><i class="fa-solid fa-dna"></i> Ontology Services</h4>
+            <ul>
+              <li><code class="inline">ontology_validation/ontology_loader.py</code></li>
+              <li><code class="inline">ontology_validation/disease_linker.py</code></li>
+              <li><code class="inline">ontology_validation/validator.py</code></li>
+              <li><code class="inline">ontology_validation/suggestions.py</code></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4><i class="fa-solid fa-flask-vial"></i> Assets &amp; Tests</h4>
+            <ul>
+              <li><code class="inline">data/ontology/doid.owl</code></li>
+              <li><code class="inline">ontology_validation/shapes.ttl</code></li>
+              <li><code class="inline">tests/*.py</code></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <p>Need a condensed view? See <a href="ARCHITECTURE.md">Architecture</a> or <a href="AGENT_OVERVIEW.md">Agent Overview</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

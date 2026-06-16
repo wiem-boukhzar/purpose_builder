@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Suggested Next Steps – Purpose Creator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root { color-scheme: dark; --bg: radial-gradient(circle at top, #0c1221 0%, #020617 55%, #010409 100%); --card: rgba(15, 23, 42, 0.78); --border: rgba(148, 163, 184, 0.24); --text: #f8fafc; --muted: #94a3b8; --primary: #38bdf8; --accent: #f97316; --success: #34d399; }
+      body { margin: 0; background: var(--bg); font-family: "Inter", "Segoe UI", sans-serif; color: var(--text); line-height: 1.7; padding: 3.5rem 1rem 4rem; }
+      .container { max-width: 980px; margin: 0 auto; }
+      a.back { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 0.9rem; border-radius: 12px; border: 1px solid rgba(148, 163, 184, 0.3); color: var(--primary); text-decoration: none; margin-bottom: 1.8rem; background: rgba(15, 23, 42, 0.55); }
+      a.back:hover { border-color: rgba(148, 163, 184, 0.6); }
+      header { text-align: center; margin-bottom: 2.5rem; }
+      header h1 { font-size: clamp(2.1rem, 4vw, 3rem); margin: 0; font-weight: 800; }
+      header p { color: var(--muted); margin: 0.75rem auto 0; max-width: 700px; }
+      .card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 2.5rem; box-shadow: 0 24px 48px -24px rgba(8, 47, 73, 0.6); }
+      h2 { margin-top: 0; font-size: 1.75rem; }
+      h3 { margin-top: 2rem; font-size: 1.25rem; color: var(--primary); }
+      p, li { font-size: 1.05rem; }
+      ul { padding-left: 1.4rem; }
+      .grid { display: grid; gap: 1.35rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top: 1.6rem; }
+      .tile { background: rgba(15, 23, 42, 0.78); border: 1px solid rgba(148, 163, 184, 0.22); border-radius: 18px; padding: 1.4rem 1.5rem; box-shadow: 0 16px 32px -22px rgba(8, 47, 73, 0.56); }
+      .tile h4 { margin: 0 0 0.4rem; color: var(--primary); font-size: 1.12rem; }
+      .badge { display: inline-block; padding: 0.25rem 0.65rem; border-radius: 999px; background: rgba(56, 189, 248, 0.16); color: var(--primary); font-size: 0.88rem; margin-bottom: 0.6rem; }
+      .badge.impact { background: rgba(52, 211, 153, 0.18); color: var(--success); }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a class="back" href="../DETAILED_OVERVIEW.html">&#8592; Back to Comprehensive Guide</a>
+      <header>
+        <h1>Suggested Next Steps</h1>
+        <p>Prioritised ideas to harden the product, expand coverage, and reduce manual workload for pharma teams.</p>
+      </header>
+
+      <div class="card">
+        <h2>Roadmap Themes</h2>
+        <div class="grid">
+          <div class="tile">
+            <div class="badge impact">High impact</div>
+            <h4>Automated option shortcuts</h4>
+            <p>Teach the parser to recognise “option 4” even if the user refers to a prior turn, ensuring hands-free refinement during live workshops.</p>
+          </div>
+          <div class="tile">
+            <div class="badge">Medium impact</div>
+            <h4>Therapeutic area validation</h4>
+            <p>Add SHACL shapes tying diseases to allowable therapeutic areas, preventing mismatched TA selections in exports.</p>
+          </div>
+          <div class="tile">
+            <div class="badge impact">High impact</div>
+            <h4>Incremental ontology updates</h4>
+            <p>Integrate ROBOT or Ontofox to diff weekly DOID releases and regenerate the label index without manual steps.</p>
+          </div>
+        </div>
+
+        <h3>Operational Enhancements</h3>
+        <ul>
+          <li>Introduce Prometheus metrics (LLM latency, validation latency, unknown term count) for live dashboards.</li>
+          <li>Automate daily smoke tests via CI so ontology or prompt regressions are caught before users notice.</li>
+          <li>Seed the exported JSON into downstream study trackers to prove end-to-end integration.</li>
+        </ul>
+
+        <h3>User Experience Refinements</h3>
+        <ul>
+          <li>Add a “try another disease” button whenever suggestions exhaust without a confident match.</li>
+          <li>Surface the ontology label and DOID on hover inside the chat bubbles for transparency.</li>
+          <li>Offer CSV/PDF export for stakeholders that cannot consume JSON directly.</li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

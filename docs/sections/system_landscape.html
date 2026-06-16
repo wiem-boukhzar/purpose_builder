@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>System Landscape – Purpose Creator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: radial-gradient(circle at top, #0f172a 0%, #020617 55%, #010409 100%);
+        --card: rgba(15, 23, 42, 0.78);
+        --border: rgba(148, 163, 184, 0.22);
+        --text: #f8fafc;
+        --muted: #94a3b8;
+        --primary: #38bdf8;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        font-family: "Inter", "Segoe UI", sans-serif;
+        color: var(--text);
+        line-height: 1.7;
+        padding: 3.5rem 1rem 4rem;
+      }
+      .container {
+        max-width: 960px;
+        margin: 0 auto;
+      }
+      header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+      }
+      header h1 {
+        font-size: clamp(2.2rem, 4vw, 3rem);
+        margin: 0;
+        font-weight: 800;
+      }
+      header p {
+        margin: 0.75rem auto 0;
+        color: var(--muted);
+        max-width: 680px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        padding: 2.4rem;
+        box-shadow: 0 24px 48px -24px rgba(8, 47, 73, 0.6);
+      }
+      h2 {
+        margin-top: 0;
+        font-size: 1.8rem;
+      }
+      h3 {
+        font-size: 1.25rem;
+        margin-top: 2rem;
+        color: var(--primary);
+      }
+      ul {
+        padding-left: 1.4rem;
+      }
+      a.back {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.55rem 0.9rem;
+        border-radius: 12px;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        color: var(--primary);
+        text-decoration: none;
+        margin-bottom: 1.8rem;
+        background: rgba(15, 23, 42, 0.55);
+      }
+      a.back:hover {
+        border-color: rgba(148, 163, 184, 0.6);
+      }
+      .note {
+        background: rgba(56, 189, 248, 0.12);
+        border-left: 3px solid var(--primary);
+        padding: 1rem 1.25rem;
+        border-radius: 14px;
+        color: var(--primary);
+        margin: 1.5rem 0;
+      }
+      code {
+        background: rgba(2, 6, 23, 0.6);
+        border-radius: 6px;
+        padding: 0.15rem 0.35rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a class="back" href="../DETAILED_OVERVIEW.html">&#8592; Back to Comprehensive Guide</a>
+      <header>
+        <h1>System Landscape</h1>
+        <p>An expanded look at the actors and layers that make up the Purpose Creator deployment.</p>
+      </header>
+
+      <div class="card">
+        <h2>Stakeholders</h2>
+        <p>The agent targets two primary audiences:</p>
+        <ul>
+          <li><strong>Discovery / clinical researchers</strong> capture high-level intents (disease focus, medication, collaborators, product development) in a conversational manner.</li>
+          <li><strong>Regulatory and portfolio teams</strong> consume the exported JSON/validation report to seed downstream systems or track portfolio health.</li>
+        </ul>
+
+        <div class="note"><strong>Example workflow:</strong> A translational scientist sketches a new program targeting “type 2 diabetes mellitus” and “obesity”. The agent ensures each disease maps to a DOID and prompts for therapeutic area, medication plans, collaborators, and product development status.</div>
+
+        <h2>Layer Overview</h2>
+        <h3>Streamlit UI</h3>
+        <ul>
+          <li>Chat-driven data collection with numbered suggestion shortcuts (e.g., responding “option 3”).</li>
+          <li>Real-time structured summary card showing validation messages and download options.</li>
+        </ul>
+
+        <h3>Purpose Application Layer</h3>
+        <ul>
+          <li>LangGraph workflow coordinates LLM extraction, parsing, and validation.</li>
+          <li>Logging utilities output JSON events for chat turns, LLM calls, and validation results (<code>purpose_app/logging_utils.py</code>).</li>
+        </ul>
+
+        <h3>Ontology &amp; Validation Services</h3>
+        <ul>
+          <li>Loads the Disease Ontology snapshot, builds label/synonym indexes, and precomputes subclass hints.</li>
+          <li>Supports both full SHACL specificity checks and the performance-oriented child-map shortcut.</li>
+        </ul>
+
+        <h3>Data &amp; Infrastructure</h3>
+        <ul>
+          <li><code>data/ontology/doid.owl</code> anchors validation to a known DO release.</li>
+          <li><code>ontology_validation/shapes.ttl</code> encodes SHACL constraints so auditors can review them.</li>
+          <li>Environment variables control which LLM endpoint is used and where logs are written.</li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

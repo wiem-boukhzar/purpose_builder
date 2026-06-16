@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>SHACL vs. Pre-computed Child Map – Purpose Creator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: radial-gradient(circle at top, #0c1221 0%, #020617 55%, #010409 100%);
+        --card: rgba(15, 23, 42, 0.78);
+        --border: rgba(148, 163, 184, 0.24);
+        --text: #f8fafc;
+        --muted: #94a3b8;
+        --primary: #38bdf8;
+        --accent: #f97316;
+        --success: #34d399;
+        --warn: #facc15;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        font-family: "Inter", "Segoe UI", sans-serif;
+        color: var(--text);
+        line-height: 1.7;
+        padding: 3.5rem 1rem 4rem;
+      }
+      .container { max-width: 1040px; margin: 0 auto; }
+      a.back {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        padding: 0.55rem 0.9rem; border-radius: 12px;
+        border: 1px solid rgba(148, 163, 184, 0.3); color: var(--primary);
+        text-decoration: none; margin-bottom: 1.8rem; background: rgba(15, 23, 42, 0.55);
+      }
+      a.back:hover { border-color: rgba(148, 163, 184, 0.6); }
+      header { text-align: center; margin-bottom: 2.4rem; }
+      header h1 { font-size: clamp(2.1rem, 4vw, 3rem); margin: 0; font-weight: 800; }
+      header p { color: var(--muted); margin: 0.75rem auto 0; max-width: 760px; }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        padding: 2.4rem;
+        box-shadow: 0 24px 48px -24px rgba(8, 47, 73, 0.6);
+      }
+      h2 { margin-top: 0; font-size: 1.75rem; }
+      h3 { margin-top: 2rem; font-size: 1.25rem; color: var(--primary); }
+      p, li { font-size: 1.05rem; }
+      ul, ol { padding-left: 1.4rem; }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.8rem 0;
+        background: rgba(2, 6, 23, 0.55);
+        border-radius: 16px;
+        overflow: hidden;
+      }
+      thead { background: rgba(56, 189, 248, 0.12); }
+      th, td {
+        padding: 0.95rem 1.05rem;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+        text-align: left;
+      }
+      tbody tr:last-child td { border-bottom: none; }
+      th { color: var(--primary); font-weight: 600; }
+      code { background: rgba(2, 6, 23, 0.6); border-radius: 6px; padding: 0.15rem 0.35rem; }
+      pre {
+        background: rgba(2, 6, 23, 0.62);
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        border-radius: 14px;
+        padding: 1rem 1.2rem;
+        overflow-x: auto;
+        color: #e2e8f0;
+      }
+      .callout {
+        background: rgba(56, 189, 248, 0.12);
+        border-left: 4px solid var(--primary);
+        padding: 1.1rem 1.3rem;
+        border-radius: 16px;
+        margin: 1.8rem 0;
+      }
+      .grid { display: grid; gap: 1.4rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top: 1.6rem; }
+      .pane {
+        background: rgba(15, 23, 42, 0.78);
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 18px;
+        padding: 1.4rem 1.5rem;
+        box-shadow: 0 16px 32px -22px rgba(8, 47, 73, 0.56);
+      }
+      .pane h4 { margin: 0 0 0.4rem; font-size: 1.12rem; color: var(--primary); }
+      .badge { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.35rem 0.7rem; border-radius: 999px; font-size: 0.92rem; }
+      .badge.shacl { background: rgba(56, 189, 248, 0.18); color: var(--primary); }
+      .badge.childmap { background: rgba(250, 204, 21, 0.18); color: var(--warn); }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a class="back" href="../DETAILED_OVERVIEW.html">&#8592; Back to Comprehensive Guide</a>
+      <header>
+        <h1>SHACL vs. Pre-computed Child Map</h1>
+        <p>Two interchangeable validators keep diseases specific. SHACL offers standards-based rigor, while the child-map shortcut prioritises latency.</p>
+      </header>
+
+      <div class="card">
+        <h2>Decision Matrix</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th>SHACL (pySHACL)</th>
+              <th>Child-map Validator</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Latency</td>
+              <td>~450–600&nbsp;ms per run (RDFS inference + SPARQL)</td>
+              <td>&lt;20&nbsp;ms per run (dict lookups)</td>
+            </tr>
+            <tr>
+              <td>Extensibility</td>
+              <td>Declarative – add new constraints via Turtle shapes</td>
+            </tr>
+            <tr>
+              <td>Audit trail</td>
+              <td>Full SHACL report graph persisted to disk</td>
+              <td>Logged JSON events only (no RDF artefact)</td>
+            </tr>
+            <tr>
+              <td>Runtime footprint</td>
+              <td>Higher CPU and memory bursts during validation</td>
+              <td>Minimal additional load once child map is built</td>
+            </tr>
+            <tr>
+              <td>Best suited for</td>
+              <td>Regulated environments, compliance reviews</td>
+              <td>Demo booths, call-centre accelerators, low-power hosts</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>How Each Path Works</h2>
+        <div class="grid">
+          <div class="pane">
+            <div class="badge shacl">SHACL Path</div>
+            <h4>Pipeline</h4>
+            <ul>
+              <li><code>validate_diseases()</code> builds an RDF data graph.</li>
+              <li><code>pyshacl.validate(..., inference="rdfs")</code> evaluates shapes.</li>
+              <li>Violations return focus nodes; we re-query subclasses for suggestions.</li>
+            </ul>
+            <h4>Practical example</h4>
+            <pre><code>report = validate_diseases([iri], MONDO_GRAPH)
+if not report.conforms:
+    for generic in report.generic_concepts:
+        options = suggest_children(generic, MONDO_GRAPH)</code></pre>
+            <p>Resulting SHACL TTL is persisted for audit together with the final purpose JSON.</p>
+          </div>
+          <div class="pane">
+            <div class="badge childmap">Pre-computed Path</div>
+            <h4>Pipeline</h4>
+            <ul>
+              <li><code>build_child_map()</code> records every class with subclasses.</li>
+              <li><code>check_specificity()</code> tests membership in <code>HAS_CHILDREN</code>.</li>
+              <li>Suggestions come from the same cached adjacency list.</li>
+            </ul>
+            <h4>Practical example</h4>
+linked = link_many(["diabetes mellitus"], LABEL_INDEX, MONDO_GRAPH)
+report = validate_diseases([ld.iri for ld in linked], MONDO_GRAPH)
+assert not report.conforms
+assert report.generic_concepts == ["http://purl.obolibrary.org/obo/DOID_9352"]</code></pre>
+          </div>
+        </div>
+
+        <h2>When to Choose Which</h2>
+        <div class="callout">
+          <strong>Recommendation:</strong> default to SHACL for enterprise deployments where auditability and declarative governance matter. Switch to the child-map validator only when response time is the top priority and downstream consumers accept JSON logs as evidence.
+        </div>
+        <ol>
+          <li><strong>Pilot / demo</strong> – enable the child map to keep the chat snappy while stakeholders explore scenarios.</li>
+          <li><strong>Production</strong> – retain SHACL to generate compliance-grade validation reports alongside the exported purpose JSON.</li>
+          <li><strong>Hybrid</strong> – some teams run child map during ideation and toggle SHACL on right before submitting the final purpose artifact.</li>
+        </ol>
+      </div>
+    </div>
+  </body>
+</html>

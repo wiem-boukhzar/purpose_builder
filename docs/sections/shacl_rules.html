@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>SHACL Rule Summary – Purpose Creator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root { color-scheme: dark; --bg: radial-gradient(circle at top, #0b1220 0%, #020617 55%, #010409 100%); --card: rgba(15, 23, 42, 0.78); --border: rgba(148, 163, 184, 0.22); --text: #f8fafc; --muted: #94a3b8; --primary: #38bdf8; }
+      body { margin: 0; background: var(--bg); font-family: "Inter", "Segoe UI", sans-serif; color: var(--text); line-height: 1.7; padding: 3.5rem 1rem 4rem; }
+      .container { max-width: 960px; margin: 0 auto; }
+      a.back { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 0.9rem; border-radius: 12px; border: 1px solid rgba(148, 163, 184, 0.3); color: var(--primary); text-decoration: none; margin-bottom: 1.8rem; background: rgba(15, 23, 42, 0.55); }
+      a.back:hover { border-color: rgba(148, 163, 184, 0.6); }
+      header { text-align: center; margin-bottom: 2.4rem; }
+      header h1 { font-size: clamp(2.1rem, 4vw, 3rem); margin: 0; font-weight: 800; }
+      header p { color: var(--muted); margin: 0.75rem auto 0; max-width: 720px; }
+      .card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 2.4rem; box-shadow: 0 24px 48px -24px rgba(8, 47, 73, 0.6); }
+      h2 { margin-top: 0; font-size: 1.75rem; }
+      pre { background: rgba(2, 6, 23, 0.6); border: 1px solid rgba(148, 163, 184, 0.25); border-radius: 14px; padding: 1rem 1.2rem; overflow-x: auto; color: #e2e8f0; }
+      ul { padding-left: 1.4rem; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a class="back" href="../DETAILED_OVERVIEW.html">&#8592; Back to Comprehensive Guide</a>
+      <header>
+        <h1>SHACL Rule Summary</h1>
+        <p>These shapes power the default specificity validation. They can be extended with additional business constraints if needed.</p>
+      </header>
+
+      <div class="card">
+        <h2>Shapes File</h2>
+        <pre><code>@prefix sh:   &lt;http://www.w3.org/ns/shacl#&gt; .
+@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
+@prefix ex:   &lt;http://example.org/schema#&gt; .
+
+ex:ResearchIntentShape a sh:NodeShape ;
+  sh:targetClass ex:ResearchIntent ;
+  sh:property [
+    sh:path ex:diseaseConcept ;
+    sh:minCount 1 ;
+    sh:nodeKind sh:IRI
+  ] .
+
+ex:DiseaseSpecificityShape a sh:NodeShape ;
+  sh:targetObjectsOf ex:diseaseConcept ;
+  sh:severity sh:Violation ;
+  sh:message "Disease is generic; please pick a more specific subtype." ;
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:select "SELECT $this WHERE { ?child rdfs:subClassOf $this . } LIMIT 1"
+  ] .
+</code></pre>
+
+        <h2>Extending the Shapes</h2>
+        <ul>
+          <li>Add additional <code>sh:property</code> constraints to require therapeutic area consistency or custom datatype checks.</li>
+          <li>Use <code>sh:severity</code> to distinguish warnings vs. hard violations.</li>
+          <li>Bundle the shapes with your build artifact so compliance teams can version-control validation rules.</li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Purpose Application Core – Purpose Creator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: radial-gradient(circle at top, #0a101e 0%, #020617 55%, #010409 100%);
+        --card: rgba(15, 23, 42, 0.78);
+        --border: rgba(148, 163, 184, 0.24);
+        --text: #f8fafc;
+        --muted: #94a3b8;
+        --primary: #38bdf8;
+        --accent: #f97316;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        font-family: "Inter", "Segoe UI", sans-serif;
+        color: var(--text);
+        line-height: 1.7;
+        padding: 3.5rem 1rem 4rem;
+      }
+      .container { max-width: 1000px; margin: 0 auto; }
+      a.back {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        padding: 0.55rem 0.9rem; border-radius: 12px;
+        border: 1px solid rgba(148, 163, 184, 0.3); color: var(--primary);
+        text-decoration: none; margin-bottom: 1.8rem; background: rgba(15, 23, 42, 0.55);
+      }
+      a.back:hover { border-color: rgba(148, 163, 184, 0.6); }
+      header { text-align: center; margin-bottom: 2.4rem; }
+      header h1 { font-size: clamp(2.1rem, 4vw, 3rem); margin: 0; font-weight: 800; }
+      header p { color: var(--muted); margin: 0.75rem auto 0; max-width: 700px; }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        padding: 2.4rem;
+        box-shadow: 0 24px 48px -24px rgba(8, 47, 73, 0.6);
+      }
+      h2 { margin-top: 0; font-size: 1.75rem; }
+      h3 { margin-top: 1.9rem; font-size: 1.25rem; color: var(--primary); }
+      ul { padding-left: 1.4rem; }
+      pre {
+        background: rgba(2, 6, 23, 0.6);
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        border-radius: 14px;
+        padding: 1rem 1.2rem;
+        overflow-x: auto;
+        color: #e2e8f0;
+      }
+      code.inline { background: rgba(2, 6, 23, 0.6); border-radius: 6px; padding: 0.15rem 0.35rem; }
+      .grid { display: grid; gap: 1.2rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-top: 1.5rem; }
+      .pane {
+        background: rgba(15, 23, 42, 0.75);
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 18px;
+        padding: 1.4rem 1.5rem;
+        box-shadow: 0 16px 32px -22px rgba(8, 47, 73, 0.55);
+      }
+      .pane h4 { margin: 0 0 0.4rem; color: var(--primary); }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a class="back" href="../DETAILED_OVERVIEW.html">&#8592; Back to Comprehensive Guide</a>
+      <header>
+        <h1>Purpose Application Core</h1>
+        <p>A closer look at <code>purpose_app/common.py</code> and the helper modules that orchestrate extraction, validation, and responses.</p>
+      </header>
+
+      <div class="card">
+        <h2>Design Goals</h2>
+        <ul>
+          <li><strong>Deterministic pipeline</strong> – every user message flows through generate → parse → validate before the UI updates.</li>
+          <li><strong>State-driven UI</strong> – Streamlit components read the same <code>session_state</code> mutated by the LangGraph nodes.</li>
+          <li><strong>Observability</strong> – each stage emits JSON events via <code>logging_utils.log_event</code>.</li>
+        </ul>
+
+        <h2>Key Modules</h2>
+        <div class="grid">
+          <div class="pane">
+            <h4>LangGraph nodes</h4>
+            <p><code>build_graph(call_model)</code> assembles the <em>generate</em>, <em>parse</em>, and <em>validate</em> nodes. Each node returns a partial <code>ResearchState</code> update that is merged into <code>session_state</code>.</p>
+          </div>
+          <div class="pane">
+            <h4>Normalisation helpers</h4>
+            <p><code>normalise_diseases</code>, <code>normalise_text</code>, and <code>normalise_yes_no</code> ensure the structured payload is clean and deduplicated before storage.</p>
+          </div>
+          <div class="pane">
+            <h4>Reply logic</h4>
+            <p><code>build_assistant_reply</code> decides whether to prompt for subtypes, clarify unknowns, or move on to medication/collaborator/product development questions.</p>
+          </div>
+          <div class="pane">
+            <h4>Export helpers</h4>
+            <p><code>build_purpose_payload</code> generates the JSON artifact (diseases with DOIDs, TA, medication, collaborator, product development, ontology metadata).</p>
+          </div>
+        </div>
+
+        <h2>Example: Single Turn</h2>
+        <pre><code># user submits "type 2 diabetes mellitus"
+add_message("user", "type 2 diabetes mellitus")
+result = graph.invoke({"user_messages": [... canonical history ...]})
+update_structured_data(result["structured"])
+validation = result["validation_result"]  # linked vs unknown
+assistant_reply = build_assistant_reply(st.session_state.structured_data)
+add_message("assistant", assistant_reply)
+</code></pre>
+        <p>This sequence executes on every turn, keeping business logic isolated from UI code so the workflow can be reused in services or unit tests.</p>
+      </div>
+    </div>
+  </body>
+</html>

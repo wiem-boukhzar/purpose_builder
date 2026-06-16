@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>LangGraph Workflow – Purpose Creator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root { color-scheme: dark; --bg: radial-gradient(circle at top, #0b1220 0%, #020617 55%, #010409 100%); --card: rgba(15, 23, 42, 0.78); --border: rgba(148, 163, 184, 0.22); --text: #f8fafc; --muted: #94a3b8; --primary: #38bdf8; }
+      body { margin: 0; background: var(--bg); font-family: "Inter", "Segoe UI", sans-serif; color: var(--text); line-height: 1.7; padding: 3.5rem 1rem 4rem; }
+      .container { max-width: 960px; margin: 0 auto; }
+      a.back { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 0.9rem; border-radius: 12px; border: 1px solid rgba(148, 163, 184, 0.3); color: var(--primary); text-decoration: none; margin-bottom: 1.8rem; background: rgba(15, 23, 42, 0.55); }
+      a.back:hover { border-color: rgba(148, 163, 184, 0.6); }
+      header { text-align: center; margin-bottom: 2.4rem; }
+      header h1 { font-size: clamp(2.1rem, 4vw, 3rem); margin: 0; font-weight: 800; }
+      header p { color: var(--muted); margin: 0.75rem auto 0; max-width: 720px; }
+      .card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 2.4rem; box-shadow: 0 24px 48px -24px rgba(8, 47, 73, 0.6); }
+      h2 { margin-top: 0; font-size: 1.75rem; }
+      h3 { margin-top: 2rem; font-size: 1.2rem; color: var(--primary); }
+      .timeline { position: relative; margin: 2rem 0 0; padding-left: 2.4rem; }
+      .timeline::before { content: ""; position: absolute; top: 0; bottom: 0; left: 1.1rem; width: 2px; background: linear-gradient(180deg, rgba(56, 189, 248, 0), rgba(56, 189, 248, 0.6), rgba(56, 189, 248, 0)); }
+      .step { position: relative; margin-bottom: 1.6rem; padding: 1.2rem 1.4rem; background: rgba(15, 23, 42, 0.76); border: 1px solid rgba(148, 163, 184, 0.24); border-radius: 18px; box-shadow: 0 16px 32px -22px rgba(8, 47, 73, 0.55); }
+      .step::before { content: attr(data-step); position: absolute; top: 1.2rem; left: -1.6rem; width: 14px; height: 14px; border-radius: 50%; background: #38bdf8; box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25); color: #0b1120; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+      ul { padding-left: 1.4rem; }
+      code { background: rgba(2, 6, 23, 0.6); border-radius: 6px; padding: 0.15rem 0.35rem; }
+      pre { background: rgba(2, 6, 23, 0.6); border: 1px solid rgba(148, 163, 184, 0.25); border-radius: 14px; padding: 1rem 1.2rem; overflow-x: auto; color: #e2e8f0; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a class="back" href="../DETAILED_OVERVIEW.html">&#8592; Back to Comprehensive Guide</a>
+      <header>
+        <h1>LangGraph Workflow</h1>
+        <p>From user input to assistant reply, four LangGraph nodes coordinate LLM calls, parsing, validation, and state updates.</p>
+      </header>
+
+      <div class="card">
+        <h2>Node Timeline</h2>
+        <div class="timeline">
+          <div class="step" data-step="1">
+            <h3>generate – <code>call_*_model</code></h3>
+            <ul>
+              <li>Compose system instructions and conversation history.</li>
+              <li>Emit <code>llm_request</code> and <code>llm_response</code> telemetry.</li>
+              <li>Return <code>{"raw_response": ...}</code>.</li>
+            </ul>
+          </div>
+          <div class="step" data-step="2">
+            <h3>parse – <code>coerce_to_schema</code></h3>
+            <ul>
+              <li>Extract JSON from the raw completion.</li>
+              <li>Normalise disease names, yes/no answers, medication free text.</li>
+              <li>On failure, log <code>parse_error</code> and skip updates.</li>
+            </ul>
+          </div>
+          <div class="step" data-step="3">
+            <h3>validate – <code>run_disease_validation</code></h3>
+            <ul>
+              <li>Link diseases via RapidFuzz; populate linked/unknown/generic lists.</li>
+              <li>Perform SHACL specificity check (or the child-map shortcut).</li>
+              <li>Emit <code>validation_result*</code> events with outcomes.</li>
+            </ul>
+          </div>
+          <div class="step" data-step="4">
+            <h3>end – merge</h3>
+            <ul>
+              <li>LangGraph END node returns the diff to merge into <code>session_state</code>.</li>
+              <li>Streamlit renders the assistant prompt + structured panel.</li>
+              <li>Option shortcuts persist for quick numeric replies.</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2>Practical Example</h2>
+        <pre><code># inside frontend/app.py
+raw_message = "type 2 diabetes mellitus"
+canonical = resolve_option_shortcut(raw_message)
+add_message("user", canonical, display_content=f"{raw_message} ({canonical})")
+result = graph.invoke({"user_messages": [m["content"] for m in st.session_state.messages if m["role"] == "user"]})
+update_structured_data(result.get("structured"))
+assistant_reply = build_assistant_reply(st.session_state.structured_data)
+add_message("assistant", assistant_reply)
+</code></pre>
+        <p>The same workflow can be reused in automated tests by supplying canned user message histories and inspecting the resulting state diff.</p>
+      </div>
+    </div>
+  </body>
+</html>
