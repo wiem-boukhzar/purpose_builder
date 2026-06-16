@@ -1,0 +1,60 @@
+{
+  "optional_fields": ["medication"],
+  "fields": [
+    {
+      "key": "diseases",
+      "label": "Diseases",
+      "prompt": "Which diseases are you targeting?",
+      "display": {
+        "type": "list",
+        "empty_text": "Not provided"
+      }
+    },
+    {
+      "key": "TA",
+      "label": "Therapeutic Area",
+      "prompt": "What is the therapeutic area? Choose one: Infections; Neoplasms; Musculoskeletal Diseases; Digestive System Diseases; Stomatognathic Diseases; Respiratory Tract Diseases; Otorhinolaryngologic Diseases; Nervous System Diseases; Eye Diseases; Male Urogenital Diseases; Female Urogenital Diseases & Pregnancy Complications; Cardiovascular Diseases; Hemic and Lymphatic Diseases; Congenital, Hereditary & Neonatal Diseases & Abnormalities; Skin & Connective Tissue Diseases; Nutritional & Metabolic Diseases; Endocrine System Diseases; Immune System Diseases; Disorders of Environmental Origin; Animal Diseases; Pathological Conditions, Signs & Symptoms; Occupational Diseases; Chemically-Induced Disorders; Wounds & Injuries.",
+      "display": {
+        "type": "text",
+        "empty_text": "Not provided"
+      }
+    },
+    {
+      "key": "medication",
+      "label": "Medication",
+      "prompt": "Do you have a medication? If so, which one?",
+      "display": {
+        "type": "text",
+        "empty_text": "Not provided",
+        "treat_no_as_missing": true
+      }
+    },
+    {
+      "key": "collaborator",
+      "label": "Collaborator",
+      "prompt": "Do you have a collaborator (yes or no)?",
+      "display": {
+        "type": "yes_no",
+        "empty_text": "Not provided"
+      }
+    },
+    {
+      "key": "product_development",
+      "label": "Product Development",
+      "prompt": "Are you pursuing product development (yes or no)?",
+      "display": {
+        "type": "yes_no",
+        "empty_text": "Not provided"
+      }
+    },
+    {
+      "key": "product_development_scope",
+      "label": "Product Development Scope",
+      "prompt": "If yes, what is the product development scope?",
+      "display": {
+        "type": "text",
+        "empty_text": "Not provided"
+      }
+    }
+  ]
+}

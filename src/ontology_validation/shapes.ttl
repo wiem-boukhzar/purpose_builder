@@ -1,0 +1,47 @@
+# SHACL shapes used by ontology_validation.validator to flag generic diseases and
+# required fields; consumed indirectly by purpose_app flows and backend validation.
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex:   <http://example.org/schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+ex:ResearchIntentShape a sh:NodeShape ;
+  sh:targetClass ex:ResearchIntent ;
+  sh:property [
+    sh:path ex:diseaseConcept ;
+    sh:minCount 1 ;
+    sh:nodeKind sh:IRI
+  ] .
+ex:DiseaseSpecificityShape a sh:NodeShape ;
+  sh:targetObjectsOf ex:diseaseConcept ;
+  sh:severity sh:Violation ;
+  sh:message "Disease is generic; please pick a more specific subtype." ;
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:select "SELECT $this WHERE { ?child rdfs:subClassOf $this . } LIMIT 1"
+  ] .
+ex:MedicationAnsweredShape a sh:NodeShape ;
+  sh:targetClass ex:ResearchIntent ;
+  sh:property [
+    sh:path ex:hasMedication ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:minLength 1 ;
+    sh:message "Medication must be provided (use 'no' if none)." ;
+  ] .
+ex:CollaboratorAnsweredShape a sh:NodeShape ;
+  sh:targetClass ex:ResearchIntent ;
+  sh:property [
+    sh:path ex:collaboratorStatus ;
+    sh:minCount 1 ;
+    sh:in ( "yes" "no" ) ;
+    sh:message "Collaborator must be answered yes or no." ;
+  ] .
+ex:TANotEmptyShape a sh:NodeShape ;
+  sh:targetClass ex:ResearchIntent ;
+  sh:property [
+    sh:path ex:therapeuticArea ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:minLength 1 ;
+    sh:message "Therapeutic Area is required." ;
+  ] .
